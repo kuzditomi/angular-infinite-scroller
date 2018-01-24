@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Infinite scroll example</title>
-    <link href="style.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet" />
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="../src/angular-infinite-scroll.js"></script>
-    
+
 </head>
+
 <body ng-app="example">
     <main ng-controller="ExampleController">
-        <div infinite-scroller="item in items">
-            {{item}}
+        <div class="scroll-container">
+            <div infinite-scroller="item in items">
+                {{item}}
+            </div>
         </div>
 
         <button ng-click="items[1] = items[1]+1">update some element</button>
     </main>
     <script src="example.js"></script>
 </body>
+
 </html>
