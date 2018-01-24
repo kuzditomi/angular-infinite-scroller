@@ -18,25 +18,39 @@
                                 parent = element.parent(),
                                 elements = [],
                                 from = to = 0,
+                                lastScrollTop = 0,
                                 collection;
 
                             $scope.$watchCollection(collectionString, function (newCollection) {
+                                //TODO: update visible children
+
                                 collection = newCollection;
-                                //cleanChildren();
-                                addChildren();
+                                addChildrenBottom();
                             });
 
                             parent.bind('scroll', function (evt) {
                                 $scope.$apply(function () {
-                                    let el = evt.target;
-                                    let current = el.scrollTop + el.offsetHeight;
-                                    let bottom = el.scrollHeight
+                                    let el = parent[0];
 
-                                    if (current == bottom) {
-                                        addChildren();
-                                        removeTopChildren();
+                                    if (lastScrollTop < el.scrollTop) {
+                                        // scrolling down    
+                                        let current = el.scrollTop + el.offsetHeight;
+                                        let bottom = el.scrollHeight
+
+                                        if (current == bottom) {
+                                            addChildrenBottom();
+                                            removeChildrenTop();
+                                        }
+                                    } else if (lastScrollTop > el.scrollTop) {
+                                        // scrolling up
+                                        if (el.scrollTop < (elements[0].el[0].scrollHeight * BUFFER_COUNT)) {
+                                            addChildrenTop();
+                                            removeChildrenBottom();
+                                        }
                                     }
                                 });
+
+                                lastScrollTop = parent[0].scrollTop;
                             });
 
                             function cleanChildren() {
@@ -47,7 +61,28 @@
                                 elements = [];
                             }
 
-                            function addChildren(addminimum) {
+                            function addChildrenTop() {
+                                let countTillStop = LOAD_COUNT;
+
+                                for (var i = from; i > 0 && countTillStop > 0; i--) {
+                                    let childScope = $scope.$new();
+                                    childScope[indexString] = collection[i];
+
+                                    linker(childScope, function (clone) {
+                                        parent.prepend(clone);
+                                        let block = {};
+                                        block.el = clone;
+                                        block.scope = childScope;
+                                        elements.unshift(block);
+                                    });
+
+                                    countTillStop--;
+                                }
+
+                                from = i;
+                            }
+
+                            function addChildrenBottom(addminimum) {
                                 let countTillStop = addminimum || BUFFER_COUNT;
 
                                 for (var i = to; i < collection.length && countTillStop > 0; i++) {
@@ -76,7 +111,7 @@
                                 to = i;
                             }
 
-                            function removeTopChildren() {
+                            function removeChildrenTop() {
                                 if (elements.length < BUFFER_COUNT) {
                                     return;
                                 }
@@ -90,7 +125,28 @@
 
                                     if (elementBottom < scrollTop) {
                                         removeElement(0);
-                                        from++
+                                        from++;
+                                    } else {
+                                        hasInvisibleChildren = false;
+                                    }
+                                }
+                            }
+
+                            function removeChildrenBottom() {
+                                if (elements.length < BUFFER_COUNT) {
+                                    return;
+                                }
+
+                                let hasInvisibleChildren = true;
+
+                                while (hasInvisibleChildren) {
+                                    let el = elements[elements.length - BUFFER_COUNT].el[0];
+                                    let elementTop = el.offsetTop;
+                                    let bottom = parent[0].scrollTop + parent[0].offsetHeight;
+
+                                    if (elementTop > bottom) {
+                                        removeElement(elements.length - 1);
+                                        to--;
                                     } else {
                                         hasInvisibleChildren = false;
                                     }
