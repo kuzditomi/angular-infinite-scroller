@@ -17,24 +17,26 @@
                                 collectionString = match[2],
                                 parent = element.parent(),
                                 elements = [],
+                                from = to = 0,
                                 collection;
 
                             $scope.$watchCollection(collectionString, function (newCollection) {
                                 collection = newCollection;
-                                cleanChildren();
+                                //cleanChildren();
                                 addChildren();
                             });
 
-                            element.parent().bind('scroll', function (evt) {
-                                $scope.$apply(function(){
+                            parent.bind('scroll', function (evt) {
+                                $scope.$apply(function () {
                                     let el = evt.target;
                                     let current = el.scrollTop + el.offsetHeight;
                                     let bottom = el.scrollHeight
-    
+
                                     if (current == bottom) {
                                         addChildren();
+                                        removeTopChildren();
                                     }
-                                });                                
+                                });
                             });
 
                             function cleanChildren() {
@@ -48,7 +50,7 @@
                             function addChildren(addminimum) {
                                 let countTillStop = addminimum || BUFFER_COUNT;
 
-                                for (var i = elements.length; i < collection.length && countTillStop > 0; i++) {
+                                for (var i = to; i < collection.length && countTillStop > 0; i++) {
                                     let childScope = $scope.$new();
                                     childScope[indexString] = collection[i];
 
@@ -70,6 +72,35 @@
                                         }
                                     });
                                 }
+
+                                to = i;
+                            }
+
+                            function removeTopChildren() {
+                                if (elements.length < BUFFER_COUNT) {
+                                    return;
+                                }
+
+                                let hasInvisibleChildren = true;
+
+                                while (hasInvisibleChildren) {
+                                    let el = elements[BUFFER_COUNT].el[0];
+                                    let elementBottom = el.offsetTop + el.offsetHeight;
+                                    let scrollTop = parent[0].offsetTop + parent[0].scrollTop;
+
+                                    if (elementBottom < scrollTop) {
+                                        removeElement(0);
+                                        from++
+                                    } else {
+                                        hasInvisibleChildren = false;
+                                    }
+                                }
+                            }
+
+                            function removeElement(index) {
+                                let el = elements.splice(index, 1)[0];
+                                el.el.remove();
+                                el.scope.$destroy();
                             }
                         }
                     }
