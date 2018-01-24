@@ -5,6 +5,11 @@
         '$scope',
         function (scope) {
             scope.szia = 'Hello';
+            scope.items = [
+                1,
+                2,
+                3
+            ]
         }
     ]);
 }())
