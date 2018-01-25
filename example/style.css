@@ -1,5 +1,18 @@
-.scroll-container {
+div.scroll-container {
     height: 200px;
     width: 100px;
     overflow-y: scroll;
+}
+
+
+tbody.scroll-container {
+    display:block;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+tbody.scroll-container tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
 }

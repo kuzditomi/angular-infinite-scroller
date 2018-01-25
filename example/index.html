@@ -14,13 +14,37 @@
 
 <body ng-app="example">
     <main ng-controller="ExampleController">
-        <div class="scroll-container">
-            <div infinite-scroller="item in items">
-                {{item}}
+        <div>
+            <h1>Simple list</h1>
+
+            <div class="scroll-container">
+                <div infinite-scroller="item in items">
+                    {{item}}
+                </div>
             </div>
+
+            <button ng-click="items[1] = items[1]+1">update second element</button>
+            <button ng-click="items.splice(2,1)">remove third element</button>
+            <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
         </div>
 
-        <button ng-click="items[1] = items[1]+1">update some element</button>
+        <div>
+            <h1>table</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                    </tr>
+                </thead>
+                <tbody class="scroll-container">
+                    <tr infinite-scroller="row in rows">
+                        <td>{{row.id}}</td>
+                        <td>{{row.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
     <script src="example.js"></script>
 </body>

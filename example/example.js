@@ -12,6 +12,18 @@
             }
 
             scope.items = numbers;
+
+
+            let rows = [];
+
+            for (var i = 0; i < 100; i++) {
+                rows.push({
+                    id: i,
+                    name: 'number ' + i
+                })
+            }
+
+            scope.rows = rows;
         }
     ]);
 }())
