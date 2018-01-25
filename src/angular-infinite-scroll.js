@@ -22,10 +22,18 @@
                                 collection;
 
                             $scope.$watchCollection(collectionString, function (newCollection) {
-                                //TODO: update visible children
-
                                 collection = newCollection;
-                                addChildrenBottom();
+
+                                // first population
+                                if (elements.length == 0) {
+                                    addChildrenBottom();
+                                    return;
+                                }
+
+                                for (var i = 0; i < elements.length; i++) {
+                                    let element = elements[i];
+                                    element.scope[indexString] = collection[from + i];
+                                }
                             });
 
                             parent.bind('scroll', function (evt) {
@@ -64,7 +72,7 @@
                             function addChildrenTop() {
                                 let countTillStop = LOAD_COUNT;
 
-                                for (var i = from; i > 0 && countTillStop > 0; i--) {
+                                for (var i = from; i >= 0 && countTillStop > 0; i--) {
                                     let childScope = $scope.$new();
                                     childScope[indexString] = collection[i];
 
