@@ -28,19 +28,19 @@
             <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
         </div>
 
-        <div>
-            <h1>table</h1>
+        <div class="table-container">
+            <h1>Table</h1>
             <table>
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>name</th>
+                        <th class="col id">id</th>
+                        <th class="col name">name</th>
                     </tr>
                 </thead>
                 <tbody class="scroll-container">
                     <tr infinite-scroller="row in rows">
-                        <td>{{row.id}}</td>
-                        <td>{{row.name}}</td>
+                        <td class="col id">{{row.id}}</td>
+                        <td class="col name">{{row.name}}</td>
                     </tr>
                 </tbody>
             </table>

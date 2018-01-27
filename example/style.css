@@ -4,15 +4,31 @@ div.scroll-container {
     overflow-y: scroll;
 }
 
+div.table-container{
+    width: 300px;
+}
 
-tbody.scroll-container {
+table thead, table tbody{
     display:block;
+}
+table thead th{
+    text-align: left;
+}
+tbody.scroll-container {
     height: 200px;
     overflow-y: scroll;
 }
 
-tbody.scroll-container tr {
+table tbody tr, table thead tr {
     display:table;
     width:100%;
     table-layout:fixed;
+}
+
+thead th.col.id, tbody td.col.id{
+    width: 20px;
+}
+
+thead th.col.name, tbody td.col.name{
+    width: 100%;
 }
