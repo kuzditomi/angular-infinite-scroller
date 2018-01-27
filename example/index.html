@@ -28,6 +28,25 @@
             <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
         </div>
 
+        <div class="complex-list-container">
+            <h1>Complex list</h1>
+
+            <div class="scroll-container">
+                <div infinite-scroller="stuff in stuffs">
+                    <div class="stuff">
+                        <span ng-bind="stuff.id"></span>
+                        <input type="text" ng-model="stuff.name" />
+                        <select ng-model="stuff.color">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                        <span class="color-box" ng-style="{background:stuff.color}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-container">
             <h1>Table</h1>
             <table>
@@ -45,6 +64,8 @@
                 </tbody>
             </table>
         </div>
+
+
     </main>
     <script src="example.js"></script>
 </body>

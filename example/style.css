@@ -1,11 +1,13 @@
 div.scroll-container {
     height: 200px;
-    width: 100px;
+    width: 200px;
     overflow-y: scroll;
 }
 
-div.table-container{
+
+div.complex-list-container, div.table-container {
     width: 300px;
+    float: left;
 }
 
 table thead, table tbody{
@@ -31,4 +33,12 @@ thead th.col.id, tbody td.col.id{
 
 thead th.col.name, tbody td.col.name{
     width: 100%;
+}
+
+
+span.color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid black;
 }
