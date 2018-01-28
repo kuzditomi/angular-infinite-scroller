@@ -16,7 +16,8 @@ scrollerModule.directive('infiniteScroller', function () {
                 from = 0,
                 to = 0,
                 lastScrollTop = 0,
-                collection;
+                collection,
+                useRevealer = attr['useRevealer'] != undefined;
 
             scope.$watchCollection(collectionString, function (newCollection) {
                 collection = newCollection;
@@ -28,19 +29,19 @@ scrollerModule.directive('infiniteScroller', function () {
                 }
 
                 for (var i = 0; i < elements.length; i++) {
-                    let element = elements[i];
+                    const element = elements[i];
                     element.scope[indexString] = collection[from + i];
                 }
             });
 
             parent.bind('scroll', function (evt) {
                 scope.$apply(function () {
-                    let el = parent[0];
+                    const el = parent[0];
 
                     if (lastScrollTop < el.scrollTop) {
                         // scrolling down    
-                        let current = el.scrollTop + el.offsetHeight;
-                        let bottom = el.scrollHeight;
+                        const current = el.scrollTop + el.offsetHeight;
+                        const bottom = el.scrollHeight;
 
                         if (current == bottom) {
                             addChildrenBottom();
@@ -68,18 +69,15 @@ scrollerModule.directive('infiniteScroller', function () {
 
             function addChildrenTop() {
                 let countTillStop = LOAD_COUNT;
+                const parentElement = parent;
 
                 for (var i = from - 1; i >= 0 && countTillStop > 0; i--) {
-                    let childScope = scope.$new();
+                    const childScope = scope.$new();
                     childScope[indexString] = collection[i];
 
-                    linker(childScope, function (clone) {
-                        parent.prepend(clone);
-                        let block = {};
-                        block.el = clone;
-                        block.scope = childScope;
-                        elements.unshift(block);
-                    });
+                    const newElement = transcludeElement(childScope, i);
+                    parentElement.prepend(newElement.el);
+                    elements.unshift(newElement);
 
                     countTillStop--;
                 }
@@ -87,33 +85,42 @@ scrollerModule.directive('infiniteScroller', function () {
                 from = i + 1;
             }
 
-            function addChildrenBottom(addminimum) {
-                let countTillStop = addminimum || BUFFER_COUNT;
+            function addChildrenBottom() {
+                const parentElement = parent;
 
-                for (var i = to; i < collection.length && countTillStop > 0; i++) {
-                    let childScope = scope.$new();
+                // add this many children below visible area
+                let overflowCounter = elements.length > 0 ? BUFFER_COUNT : LOAD_COUNT;
+
+                for (var i = to; i < collection.length && overflowCounter > 0; i++) {
+                    const childScope = scope.$new();
                     childScope[indexString] = collection[i];
 
-                    linker(childScope, function (clone) {
-                        parent.append(clone);
-                        let block = {};
-                        block.el = clone;
-                        block.scope = childScope;
-                        elements.push(block);
+                    const newElement = transcludeElement(childScope, i);
+                    parentElement.append(newElement.el);
+                    elements.push(newElement);
 
-                        // limit initial display
-                        let parentEl = parent[0];
-                        let blockEl = block.el[0];
-                        let parentBottom = parentEl.offsetTop + parentEl.scrollTop + parentEl.offsetHeight;
-                        let blockBottom = parentEl.offsetTop + blockEl.offsetTop + blockEl.offsetHeight;
+                    const parentEl = parent[0];
+                    const blockEl = newElement.el[0];
+                    const parentBottom = parentEl.offsetTop + parentEl.scrollTop + parentEl.offsetHeight;
+                    const blockBottom = parentEl.offsetTop + blockEl.offsetTop + blockEl.offsetHeight;
 
-                        if (blockBottom > parentBottom) {
-                            countTillStop--;
-                        }
-                    });
+                    if (blockBottom > parentBottom) {
+                        overflowCounter--;
+                    }
                 }
 
                 to = i;
+            }
+
+            function transcludeElement(childScope, index) {
+                const block = {};
+
+                linker(childScope, function (clone) {
+                    block.el = clone;
+                    block.scope = childScope;
+                });
+
+                return block;
             }
 
             function removeChildrenTop() {
@@ -122,11 +129,10 @@ scrollerModule.directive('infiniteScroller', function () {
                 }
 
                 let hasInvisibleChildren = true;
-
                 while (hasInvisibleChildren) {
-                    let el = elements[BUFFER_COUNT].el[0];
-                    let elementBottom = el.offsetTop + el.offsetHeight;
-                    let scrollTop = parent[0].offsetTop + parent[0].scrollTop;
+                    const el = elements[BUFFER_COUNT].el[0];
+                    const elementBottom = el.offsetTop + el.offsetHeight;
+                    const scrollTop = parent[0].offsetTop + parent[0].scrollTop;
 
                     if (elementBottom < scrollTop) {
                         removeElement(0);
@@ -143,11 +149,10 @@ scrollerModule.directive('infiniteScroller', function () {
                 }
 
                 let hasInvisibleChildren = true;
-
                 while (hasInvisibleChildren) {
-                    let el = elements[elements.length - BUFFER_COUNT].el[0];
-                    let elementTop = el.offsetTop;
-                    let bottom = parent[0].offsetHeight + parent[0].scrollTop + parent[0].offsetHeight;
+                    const el = elements[elements.length - BUFFER_COUNT].el[0];
+                    const elementTop = el.offsetTop;
+                    const bottom = parent[0].offsetHeight + parent[0].scrollTop + parent[0].offsetHeight;
 
                     if (elementTop > bottom) {
                         removeElement(elements.length - 1);
@@ -159,7 +164,7 @@ scrollerModule.directive('infiniteScroller', function () {
             }
 
             function removeElement(index) {
-                let el = elements.splice(index, 1)[0];
+                const el = elements.splice(index, 1)[0];
                 el.el.remove();
                 el.scope.$destroy();
             }

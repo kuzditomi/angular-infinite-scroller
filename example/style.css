@@ -1,40 +1,58 @@
+div.example-container {
+    width: 50%;
+    height: 300px;
+    margin: 0;
+    padding: 0;
+    float: left;
+}
+
 div.scroll-container {
     height: 200px;
     width: 200px;
     overflow-y: scroll;
 }
 
+div.float-scroll-container {
+    height: 200px;
+    width: 200px;
+    overflow-y: scroll;
+}
 
-div.complex-list-container, div.table-container {
-    width: 300px;
+div.float-scroll-container .float-item {
+    width: 50%;
     float: left;
 }
 
-table thead, table tbody{
-    display:block;
+div.float-scroll-container .float-item:nth-child(2n+1){
+    clear: both;
 }
-table thead th{
+
+table thead, table tbody {
+    display: block;
+}
+
+table thead th {
     text-align: left;
 }
+
 tbody.scroll-container {
     height: 200px;
     overflow-y: scroll;
 }
 
 table tbody tr, table thead tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
-thead th.col.id, tbody td.col.id{
+thead th.col.id, tbody td.col.id {
     width: 20px;
 }
 
-thead th.col.name, tbody td.col.name{
+thead th.col.name, tbody td.col.name {
     width: 100%;
 }
-
 
 span.color-box {
     width: 10px;

@@ -8,13 +8,13 @@
     <title>Infinite scroll example</title>
     <link href="style.css" rel="stylesheet" />
     <script src="node_modules/angular/angular.min.js"></script>
-    <script src="../src/angular-infinite-scroll.min.js"></script>
+    <script src="../src/angular-infinite-scroll.js"></script>
 
 </head>
 
 <body ng-app="example">
     <main ng-controller="ExampleController">
-        <div>
+        <div class="example-container">
             <h1>Simple list</h1>
 
             <div class="scroll-container">
@@ -28,7 +28,17 @@
             <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
         </div>
 
-        <div class="complex-list-container">
+        <div class="example-container">
+            <h1>Floating list</h1>
+
+            <div class="float-scroll-container">
+                <div infinite-scroller="item in items" class="float-item" use-revealer>
+                    {{item}}
+                </div>
+            </div>
+        </div>
+
+        <div class="example-container">
             <h1>Complex list</h1>
 
             <div class="scroll-container">
@@ -47,7 +57,7 @@
             </div>
         </div>
 
-        <div class="table-container">
+        <div class="example-container">
             <h1>Table</h1>
             <table>
                 <thead>
