@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/angular-infinite-scroll.min.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/kuzditomi/angular-infinite-scroller/issues"
   },
-  "homepage": "https://github.com/kuzditomi/angular-infinite-scroller#readme"
+  "homepage": "https://github.com/kuzditomi/angular-infinite-scroller#readme",
+  "dependencies": {
+    "typescript": "2.6.2"
+  },
+  "devDependencies": {
+    "@types/angular": "1.6.41",
+    "angular": "^1.6.8",
+    "ts-loader": "^3.3.1",
+    "webpack": "^3.10.0"
+  }
 }
