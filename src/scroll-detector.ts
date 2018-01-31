@@ -20,8 +20,7 @@ class ScrollDetector {
                 }
             } else if (this.lastScrollTop > parentEl.scrollTop) {
                 const topElement = parentEl.children[0];
-
-                if (parentEl.scrollTop < (topElement.scrollHeight * this.BUFFER_COUNT)) {
+                if (topElement && parentEl.scrollTop < (topElement.scrollHeight * this.BUFFER_COUNT)) {
                     this.OnScrollUp && this.OnScrollUp();
                 }
             }

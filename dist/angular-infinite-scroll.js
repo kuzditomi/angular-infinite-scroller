@@ -34,9 +34,7 @@ var ElementsManager = /** @class */ (function () {
         this.AddTop = function () {
             var countTillStop = _this.LOAD_COUNT;
             for (var i = _this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
-                var childScope = _this.descriptor.Scope.$new();
-                childScope[_this.descriptor.IndexString] = _this.collection[i];
-                var newElement = _this.transcludeElement(childScope, i);
+                var newElement = _this.transcludeElement(i);
                 _this.container.prepend(newElement.Element);
                 _this.items.unshift(newElement);
                 countTillStop--;
@@ -47,14 +45,12 @@ var ElementsManager = /** @class */ (function () {
             // add this many children below visible area
             var overflowCounter = _this.items.length > 0 ? _this.BUFFER_COUNT : _this.LOAD_COUNT;
             for (var i = _this.displayTo; i < _this.collection.length && overflowCounter > 0; i++) {
-                var childScope = _this.descriptor.Scope.$new();
-                childScope[_this.descriptor.IndexString] = _this.collection[i];
-                var item = _this.transcludeElement(childScope, i);
+                var item = _this.transcludeElement(i);
                 _this.container.append(item.Element);
                 _this.items.push(item);
                 var blockEl = item.Element[0];
                 var parentBottom = _this.containerElement.offsetTop + _this.containerElement.scrollTop + _this.containerElement.offsetHeight;
-                var blockBottom = _this.containerElement.offsetTop + blockEl.offsetTop + blockEl.offsetHeight;
+                var blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
                 if (blockBottom > parentBottom) {
                     overflowCounter--;
                 }
@@ -103,8 +99,10 @@ var ElementsManager = /** @class */ (function () {
                 item.Scope[_this.descriptor.IndexString] = _this.collection[_this.displayFrom + i];
             }
         };
-        this.transcludeElement = function (childScope, index) {
+        this.transcludeElement = function (index) {
             var item = {};
+            var childScope = _this.descriptor.Scope.$new();
+            childScope[_this.descriptor.IndexString] = _this.collection[index];
             _this.linker(childScope, function (clone) {
                 item.Element = clone;
                 item.Scope = childScope;
@@ -142,7 +140,7 @@ var ScrollDetector = /** @class */ (function () {
                 }
                 else if (_this.lastScrollTop > parentEl.scrollTop) {
                     var topElement = parentEl.children[0];
-                    if (parentEl.scrollTop < (topElement.scrollHeight * _this.BUFFER_COUNT)) {
+                    if (topElement && parentEl.scrollTop < (topElement.scrollHeight * _this.BUFFER_COUNT)) {
                         _this.OnScrollUp && _this.OnScrollUp();
                     }
                 }
@@ -190,37 +188,21 @@ var Scroller = /** @class */ (function () {
     });
     return Scroller;
 }());
-/// <reference path="scroller.ts" />
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var RevealerScroller = /** @class */ (function (_super) {
-    __extends(RevealerScroller, _super);
-    function RevealerScroller(descriptor, detector, elementsManager) {
-        return _super.call(this, descriptor, detector, elementsManager) || this;
-    }
-    return RevealerScroller;
-}(Scroller));
 /// <reference path="descriptor.ts" />
 /// <reference path="scroller.ts" />
-/// <reference path="revealer-scroller.ts" />
 var ScrollerFactory = /** @class */ (function () {
     function ScrollerFactory() {
     }
     ScrollerFactory.createFrom = function (descriptor, linker) {
         var detector = new ScrollDetector();
-        var elementsManager = new ElementsManager(descriptor, linker);
         if (descriptor.UseRevealer) {
-            return new RevealerScroller(descriptor, detector, elementsManager);
+            var elementsManager = new RevealerElementsManager(descriptor, linker);
+            return new Scroller(descriptor, detector, elementsManager);
         }
-        return new Scroller(descriptor, detector, elementsManager);
+        else {
+            var elementsManager = new ElementsManager(descriptor, linker);
+            return new Scroller(descriptor, detector, elementsManager);
+        }
     };
     return ScrollerFactory;
 }());
@@ -237,4 +219,91 @@ scrollerModule.directive('infiniteScroller', function () {
         }
     };
 });
+/// <reference path="descriptor.ts" />
+/// <reference path="elements-manager.ts" />
+var RevealerElementsManager = /** @class */ (function () {
+    function RevealerElementsManager(descriptor, linker) {
+        var _this = this;
+        this.descriptor = descriptor;
+        this.linker = linker;
+        this.BUFFER_COUNT = 5;
+        this.LOAD_COUNT = 10;
+        this.UpdateCollection = function (newCollection) {
+            if (_this.collection == undefined) {
+                _this.collection = newCollection;
+                _this.InitializeRevealer();
+                _this.AddBottom();
+            }
+            else {
+                //this.collection = newCollection;
+                //this.updateScopes();
+            }
+        };
+        this.InitializeRevealer = function () {
+            var newRevealer = _this.createRevealer();
+            _this.revealers.push(newRevealer);
+            _this.container.append(newRevealer.Element);
+            var i = 0;
+            var isRevealerFilled = false;
+            while (!isRevealerFilled) {
+                var item = _this.transcludeElement(i);
+                newRevealer.Element.append(item.Element);
+                newRevealer.Items.push(item);
+                var blockEl = item.Element[0];
+                var parentBottom = _this.containerElement.offsetTop + _this.containerElement.offsetHeight;
+                var blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
+                if (blockBottom > parentBottom) {
+                    // oops too much...
+                    var item_1 = newRevealer.Items.pop();
+                    item_1.Scope.$destroy();
+                    item_1.Element.remove();
+                    isRevealerFilled = true;
+                    break;
+                }
+                i++;
+            }
+            _this.revealerSize = i;
+            _this.displayTo = i;
+        };
+        this.AddTop = function () {
+        };
+        this.AddBottom = function () {
+            var newRevealer = _this.createRevealer();
+            _this.revealers.push(newRevealer);
+            _this.container.append(newRevealer.Element);
+            for (var i = 0; i < _this.revealerSize && _this.displayTo + i < _this.collection.length; i++) {
+                var item = _this.transcludeElement(_this.displayTo + i);
+                newRevealer.Element.append(item.Element);
+                newRevealer.Items.push(item);
+            }
+            _this.displayTo += i;
+        };
+        this.RemoveTop = function () {
+        };
+        this.RemoveBottom = function () {
+        };
+        this.transcludeElement = function (index) {
+            var item = {};
+            var childScope = _this.descriptor.Scope.$new();
+            childScope[_this.descriptor.IndexString] = _this.collection[index];
+            _this.linker(childScope, function (clone) {
+                item.Element = clone;
+                item.Scope = childScope;
+            });
+            return item;
+        };
+        this.createRevealer = function () {
+            var revealerElement = angular.element('<div class="revealer"></div>');
+            var revealer = {
+                Element: revealerElement,
+                Items: []
+            };
+            return revealer;
+        };
+        this.revealers = [];
+        this.container = descriptor.Element.parent();
+        this.containerElement = this.container[0];
+    }
+    return RevealerElementsManager;
+}());
 //# sourceMappingURL=angular-infinite-scroll.js.map

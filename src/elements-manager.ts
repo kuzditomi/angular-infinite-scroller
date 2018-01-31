@@ -5,7 +5,15 @@ type Item = {
     Scope: ng.IScope
 }
 
-class ElementsManager {
+interface IElementsManager {
+    UpdateCollection(newCollection: any[]): void;
+    AddTop(): void;
+    AddBottom(): void;
+    RemoveTop(): void;
+    RemoveBottom(): void;
+}
+
+class ElementsManager implements IElementsManager {
     private collection: any[];
     private container: JQLite;
     private containerElement: HTMLElement;
@@ -22,6 +30,11 @@ class ElementsManager {
         this.displayTo = 0;
         this.container = descriptor.Element.parent();
         this.containerElement = this.container[0];
+
+        // this way the memory can only leak until the scroller lives
+        this.descriptor.Scope.$on('$destroy', () => {
+            this.items = [];
+        });
     }
 
     public UpdateCollection = (newCollection: any[]) => {
@@ -29,6 +42,8 @@ class ElementsManager {
             this.collection = newCollection;
             this.AddBottom();
         } else {
+            // there is some memory-leak when removing elements from the collection, but this is low priority for now :(
+
             this.collection = newCollection;
             this.updateScopes();
         }
@@ -38,10 +53,7 @@ class ElementsManager {
         let countTillStop = this.LOAD_COUNT;
 
         for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
-            const childScope = this.descriptor.Scope.$new();
-            childScope[this.descriptor.IndexString] = this.collection[i];
-
-            const newElement = this.transcludeElement(childScope, i);
+            const newElement = this.transcludeElement(i);
             this.container.prepend(newElement.Element);
             this.items.unshift(newElement);
 
@@ -56,16 +68,13 @@ class ElementsManager {
         let overflowCounter = this.items.length > 0 ? this.BUFFER_COUNT : this.LOAD_COUNT;
 
         for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
-            const childScope = this.descriptor.Scope.$new();
-            childScope[this.descriptor.IndexString] = this.collection[i];
-
-            const item = this.transcludeElement(childScope, i);
+            const item = this.transcludeElement(i);
             this.container.append(item.Element);
             this.items.push(item);
 
             const blockEl = item.Element[0];
             const parentBottom = this.containerElement.offsetTop + this.containerElement.scrollTop + this.containerElement.offsetHeight;
-            const blockBottom = this.containerElement.offsetTop + blockEl.offsetTop + blockEl.offsetHeight;
+            const blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
 
             if (blockBottom > parentBottom) {
                 overflowCounter--;
@@ -122,8 +131,11 @@ class ElementsManager {
         }
     };
 
-    private transcludeElement = (childScope: ng.IScope, index: number): Item => {
+    private transcludeElement = (index: number): Item => {
         const item = {} as Item;
+
+        const childScope = this.descriptor.Scope.$new();
+        childScope[this.descriptor.IndexString] = this.collection[index];
 
         this.linker(childScope, (clone: JQLite) => {
             item.Element = clone;
