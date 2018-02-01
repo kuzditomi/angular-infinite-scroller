@@ -18,11 +18,14 @@ class RevealerElementsManager implements IElementsManager {
 
     private BUFFER_COUNT = 5;
     private LOAD_COUNT = 10;
+    private REVEALER_SIZE_TO_CONTAINER = 0.75
 
     constructor(private descriptor: Descriptor, private linker: ng.ITranscludeFunction) {
         this.revealers = [];
         this.container = descriptor.Element.parent();
         this.containerElement = this.container[0];
+        this.displayFrom = 0;
+        this.displayTo = 0;
 
         // this way the memory can only leak until the scroller lives
         this.descriptor.Scope.$on('$destroy', () => {
@@ -56,10 +59,10 @@ class RevealerElementsManager implements IElementsManager {
             newRevealer.Items.push(item);
 
             const blockEl = item.Element[0];
-            const parentBottom = this.containerElement.offsetTop + this.containerElement.offsetHeight;
+            const fillUntil = this.containerElement.offsetTop + this.containerElement.offsetHeight * this.REVEALER_SIZE_TO_CONTAINER;
             const blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
 
-            if (blockBottom > parentBottom) {
+            if (blockBottom > fillUntil) {
                 // oops too much...
                 const item = newRevealer.Items.pop();
 
@@ -78,23 +81,35 @@ class RevealerElementsManager implements IElementsManager {
     };
 
     public AddTop = () => {
+        if (this.displayFrom == 0) {
+            return;
+        }
+
         const newRevealer = this.createRevealer();
-        this.revealers.push(newRevealer);
-        this.container.append(newRevealer.Element);
+        this.revealers.unshift(newRevealer);
+        this.container.prepend(newRevealer.Element);
 
         let countTillStop = this.LOAD_COUNT;
 
         for (var i = 0; i < this.revealerSize; i++) {
             const index = this.displayFrom - 1 - i;
-            const newElement = this.transcludeElement(i);
+            if (index < 0) {
+                break;
+            }
+
+            const newElement = this.transcludeElement(this.displayFrom - 1 - i);
             newRevealer.Element.prepend(newElement.Element);
             newRevealer.Items.unshift(newElement);
         }
 
-        this.displayFrom = i + 1;
+        this.displayFrom -= i;
     };
 
     public AddBottom = () => {
+        if (this.displayTo == this.collection.length) {
+            return;
+        }
+
         const newRevealer = this.createRevealer();
         this.revealers.push(newRevealer);
         this.container.append(newRevealer.Element);
@@ -105,13 +120,42 @@ class RevealerElementsManager implements IElementsManager {
             newRevealer.Items.push(item);
         }
 
-        this.displayTo += i;
+        this.displayTo += i - 1;
     };
 
     public RemoveTop = () => {
+        if (this.revealers.length <= 3) {
+            return;
+        }
+
+        const revealer = this.revealers.shift();
+        this.displayFrom += revealer.Items.length;
+
+        while (revealer.Items.length > 0) {
+            const item = revealer.Items.pop();
+            item.Element.remove(); // TODO: might be unnecessary
+            item.Scope.$destroy();
+        }
+
+        revealer.Element.remove();
     };
 
     public RemoveBottom = () => {
+        if (this.revealers.length <= 3) {
+            return;
+        }
+
+        const revealer = this.revealers.pop();
+        this.displayTo -= revealer.Items.length;
+
+        while (revealer.Items.length > 0) {
+            const item = revealer.Items.pop();
+            item.Element.remove(); // TODO: might be unnecessary
+            item.Scope.$destroy();
+        }
+
+        revealer.Element.remove();
+        this.containerElement.scrollTo(0, this.containerElement.offsetHeight / 2);
     };
 
     private transcludeElement = (index: number): Item => {

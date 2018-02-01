@@ -27,6 +27,7 @@ var ElementsManager = /** @class */ (function () {
                 _this.AddBottom();
             }
             else {
+                // there is some memory-leak when removing elements from the collection, but this is low priority for now :(
                 _this.collection = newCollection;
                 _this.updateScopes();
             }
@@ -119,6 +120,10 @@ var ElementsManager = /** @class */ (function () {
         this.displayTo = 0;
         this.container = descriptor.Element.parent();
         this.containerElement = this.container[0];
+        // this way the memory can only leak until the scroller lives
+        this.descriptor.Scope.$on('$destroy', function () {
+            _this.items = [];
+        });
     }
     return ElementsManager;
 }());
@@ -140,7 +145,7 @@ var ScrollDetector = /** @class */ (function () {
                 }
                 else if (_this.lastScrollTop > parentEl.scrollTop) {
                     var topElement = parentEl.children[0];
-                    if (topElement && parentEl.scrollTop < (topElement.scrollHeight * _this.BUFFER_COUNT)) {
+                    if (topElement && parentEl.scrollTop <= (topElement.scrollHeight * _this.BUFFER_COUNT)) {
                         _this.OnScrollUp && _this.OnScrollUp();
                     }
                 }
@@ -228,6 +233,7 @@ var RevealerElementsManager = /** @class */ (function () {
         this.linker = linker;
         this.BUFFER_COUNT = 5;
         this.LOAD_COUNT = 10;
+        this.REVEALER_SIZE_TO_CONTAINER = 0.75;
         this.UpdateCollection = function (newCollection) {
             if (_this.collection == undefined) {
                 _this.collection = newCollection;
@@ -235,8 +241,9 @@ var RevealerElementsManager = /** @class */ (function () {
                 _this.AddBottom();
             }
             else {
-                //this.collection = newCollection;
-                //this.updateScopes();
+                // TODO: rebind revealers
+                // TODO: fill revealers if needed
+                // TODO: create new / remove revealers if needed
             }
         };
         this.InitializeRevealer = function () {
@@ -250,9 +257,9 @@ var RevealerElementsManager = /** @class */ (function () {
                 newRevealer.Element.append(item.Element);
                 newRevealer.Items.push(item);
                 var blockEl = item.Element[0];
-                var parentBottom = _this.containerElement.offsetTop + _this.containerElement.offsetHeight;
+                var fillUntil = _this.containerElement.offsetTop + _this.containerElement.offsetHeight * _this.REVEALER_SIZE_TO_CONTAINER;
                 var blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
-                if (blockBottom > parentBottom) {
+                if (blockBottom > fillUntil) {
                     // oops too much...
                     var item_1 = newRevealer.Items.pop();
                     item_1.Scope.$destroy();
@@ -266,8 +273,28 @@ var RevealerElementsManager = /** @class */ (function () {
             _this.displayTo = i;
         };
         this.AddTop = function () {
+            if (_this.displayFrom == 0) {
+                return;
+            }
+            var newRevealer = _this.createRevealer();
+            _this.revealers.unshift(newRevealer);
+            _this.container.prepend(newRevealer.Element);
+            var countTillStop = _this.LOAD_COUNT;
+            for (var i = 0; i < _this.revealerSize; i++) {
+                var index = _this.displayFrom - 1 - i;
+                if (index < 0) {
+                    break;
+                }
+                var newElement = _this.transcludeElement(_this.displayFrom - 1 - i);
+                newRevealer.Element.prepend(newElement.Element);
+                newRevealer.Items.unshift(newElement);
+            }
+            _this.displayFrom -= i;
         };
         this.AddBottom = function () {
+            if (_this.displayTo == _this.collection.length) {
+                return;
+            }
             var newRevealer = _this.createRevealer();
             _this.revealers.push(newRevealer);
             _this.container.append(newRevealer.Element);
@@ -276,11 +303,34 @@ var RevealerElementsManager = /** @class */ (function () {
                 newRevealer.Element.append(item.Element);
                 newRevealer.Items.push(item);
             }
-            _this.displayTo += i;
+            _this.displayTo += i - 1;
         };
         this.RemoveTop = function () {
+            if (_this.revealers.length <= 3) {
+                return;
+            }
+            var revealer = _this.revealers.shift();
+            _this.displayFrom += revealer.Items.length;
+            while (revealer.Items.length > 0) {
+                var item = revealer.Items.pop();
+                item.Element.remove(); // TODO: might be unnecessary
+                item.Scope.$destroy();
+            }
+            revealer.Element.remove();
         };
         this.RemoveBottom = function () {
+            if (_this.revealers.length <= 3) {
+                return;
+            }
+            var revealer = _this.revealers.pop();
+            _this.displayTo -= revealer.Items.length;
+            while (revealer.Items.length > 0) {
+                var item = revealer.Items.pop();
+                item.Element.remove(); // TODO: might be unnecessary
+                item.Scope.$destroy();
+            }
+            revealer.Element.remove();
+            _this.containerElement.scrollTo(0, _this.containerElement.offsetHeight / 2);
         };
         this.transcludeElement = function (index) {
             var item = {};
@@ -303,6 +353,12 @@ var RevealerElementsManager = /** @class */ (function () {
         this.revealers = [];
         this.container = descriptor.Element.parent();
         this.containerElement = this.container[0];
+        this.displayFrom = 0;
+        this.displayTo = 0;
+        // this way the memory can only leak until the scroller lives
+        this.descriptor.Scope.$on('$destroy', function () {
+            _this.revealers = [];
+        });
     }
     return RevealerElementsManager;
 }());
