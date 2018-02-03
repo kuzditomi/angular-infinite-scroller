@@ -19,11 +19,11 @@ div.float-scroll-container {
 }
 
 div.float-scroll-container .float-item {
-    width: 50%;
+    width: 33%;
     float: left;
 }
 
-div.float-scroll-container .float-item:nth-child(2n+1){
+div.float-scroll-container .float-item:nth-child(3n+1){
     clear: both;
 }
 

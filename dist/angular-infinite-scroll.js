@@ -99,6 +99,7 @@ var ElementsManager = /** @class */ (function () {
                 var item = _this.items[i];
                 item.Scope[_this.descriptor.IndexString] = _this.collection[_this.displayFrom + i];
             }
+            // TODO: clean dom if removal took place 
         };
         this.transcludeElement = function (index) {
             var item = {};
@@ -241,9 +242,20 @@ var RevealerElementsManager = /** @class */ (function () {
                 _this.AddBottom();
             }
             else {
-                // TODO: rebind revealers
-                // TODO: fill revealers if needed
-                // TODO: create new / remove revealers if needed
+                _this.collection = newCollection;
+                _this.updateScopes();
+            }
+        };
+        this.updateScopes = function () {
+            var index = _this.displayFrom;
+            for (var _i = 0, _a = _this.revealers; _i < _a.length; _i++) {
+                var rev = _a[_i];
+                for (var _b = 0, _c = rev.Items; _b < _c.length; _b++) {
+                    var item = _c[_b];
+                    // TODO: check addition and removal
+                    item.Scope[_this.descriptor.IndexString] = _this.collection[index];
+                    index++;
+                }
             }
         };
         this.InitializeRevealer = function () {

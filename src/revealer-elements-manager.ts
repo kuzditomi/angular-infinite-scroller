@@ -39,9 +39,21 @@ class RevealerElementsManager implements IElementsManager {
             this.InitializeRevealer();
             this.AddBottom();
         } else {
-            // TODO: rebind revealers
-            // TODO: fill revealers if needed
-            // TODO: create new / remove revealers if needed
+            this.collection = newCollection;
+            this.updateScopes();
+        }
+    }
+
+    private updateScopes = () => {
+        let index = this.displayFrom;
+
+        for (let rev of this.revealers) {
+            for (let item of rev.Items) {
+                // TODO: check addition and removal
+
+                item.Scope[this.descriptor.IndexString] = this.collection[index];
+                index++;
+            }
         }
     }
 

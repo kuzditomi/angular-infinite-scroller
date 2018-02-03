@@ -128,6 +128,8 @@ class ElementsManager implements IElementsManager {
             const item = this.items[i];
             item.Scope[this.descriptor.IndexString] = this.collection[this.displayFrom + i];
         }
+
+        // TODO: clean dom if removal took place 
     };
 
     private transcludeElement = (index: number): Item => {
