@@ -281,7 +281,7 @@ var RevealerElementsManager = /** @class */ (function () {
             _this.container.prepend(newRevealer.Element);
             var countTillStop = _this.LOAD_COUNT;
             for (var i = 0; i < _this.revealerSize; i++) {
-                var index = _this.displayFrom - 1 - i;
+                var index = _this.displayFrom + 1 - i;
                 if (index < 0) {
                     break;
                 }
@@ -303,7 +303,7 @@ var RevealerElementsManager = /** @class */ (function () {
                 newRevealer.Element.append(item.Element);
                 newRevealer.Items.push(item);
             }
-            _this.displayTo += i - 1;
+            _this.displayTo += i;
         };
         this.RemoveTop = function () {
             if (_this.revealers.length <= 3) {

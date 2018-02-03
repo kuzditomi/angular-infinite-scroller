@@ -92,7 +92,7 @@ class RevealerElementsManager implements IElementsManager {
         let countTillStop = this.LOAD_COUNT;
 
         for (var i = 0; i < this.revealerSize; i++) {
-            const index = this.displayFrom - 1 - i;
+            const index = this.displayFrom + 1 - i;
             if (index < 0) {
                 break;
             }
@@ -120,7 +120,7 @@ class RevealerElementsManager implements IElementsManager {
             newRevealer.Items.push(item);
         }
 
-        this.displayTo += i - 1;
+        this.displayTo += i;
     };
 
     public RemoveTop = () => {

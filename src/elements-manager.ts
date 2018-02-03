@@ -43,7 +43,6 @@ class ElementsManager implements IElementsManager {
             this.AddBottom();
         } else {
             // there is some memory-leak when removing elements from the collection, but this is low priority for now :(
-
             this.collection = newCollection;
             this.updateScopes();
         }
