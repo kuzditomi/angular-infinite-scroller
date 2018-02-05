@@ -249,13 +249,45 @@ var RevealerElementsManager = /** @class */ (function () {
         this.updateScopes = function () {
             var index = _this.displayFrom;
             for (var _i = 0, _a = _this.revealers; _i < _a.length; _i++) {
-                var rev = _a[_i];
-                for (var _b = 0, _c = rev.Items; _b < _c.length; _b++) {
-                    var item = _c[_b];
-                    // TODO: check addition and removal
-                    item.Scope[_this.descriptor.IndexString] = _this.collection[index];
+                var revealer = _a[_i];
+                for (var i = 0; i < _this.revealerSize; i++) {
+                    var hasItemToBind = index < _this.collection.length;
+                    var hasElementToBind = revealer.Items.length > i;
+                    if (hasItemToBind && hasElementToBind) {
+                        // nothing special, bind scope
+                        revealer.Items[i].Scope[_this.descriptor.IndexString] = _this.collection[index];
+                    }
+                    else if (hasItemToBind) {
+                        // create element and bind
+                        var item = _this.transcludeElement(index);
+                        revealer.Element.append(item.Element);
+                        revealer.Items.push(item);
+                    }
+                    else if (hasElementToBind) {
+                        // remove element
+                        var item = revealer.Items.pop();
+                        item.Scope.$destroy();
+                        item.Element.remove();
+                    }
+                    else {
+                        continue;
+                    }
                     index++;
                 }
+                if (revealer.Items.length == 0) {
+                    // remove revealer if it's not necessary anymore
+                    revealer.Element.remove();
+                }
+            }
+            var currentDisplayTo = _this.displayTo;
+            _this.displayTo = index;
+            if (index < currentDisplayTo && _this.collection.length > index) {
+                // create new revealers if necessary
+                _this.AddBottom();
+            }
+            else {
+                // remove unnecessary revealers
+                _this.revealers = _this.revealers.filter(function (r) { return r.Items.length > 0; });
             }
         };
         this.InitializeRevealer = function () {
@@ -272,7 +304,10 @@ var RevealerElementsManager = /** @class */ (function () {
                 var fillUntil = _this.containerElement.offsetTop + _this.containerElement.offsetHeight * _this.REVEALER_SIZE_TO_CONTAINER;
                 var blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
                 if (blockBottom > fillUntil) {
-                    // oops too much...
+                    /*
+                        i had no better idea how to detect bottom line for the case of using floats,
+                        so when the first element passes the line, let's just correct it by removing that one
+                     */
                     var item_1 = newRevealer.Items.pop();
                     item_1.Scope.$destroy();
                     item_1.Element.remove();
@@ -325,7 +360,7 @@ var RevealerElementsManager = /** @class */ (function () {
             _this.displayFrom += revealer.Items.length;
             while (revealer.Items.length > 0) {
                 var item = revealer.Items.pop();
-                item.Element.remove(); // TODO: might be unnecessary
+                item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
                 item.Scope.$destroy();
             }
             revealer.Element.remove();
@@ -338,7 +373,7 @@ var RevealerElementsManager = /** @class */ (function () {
             _this.displayTo -= revealer.Items.length;
             while (revealer.Items.length > 0) {
                 var item = revealer.Items.pop();
-                item.Element.remove(); // TODO: might be unnecessary
+                item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
                 item.Scope.$destroy();
             }
             revealer.Element.remove();

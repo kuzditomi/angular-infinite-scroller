@@ -47,13 +47,46 @@ class RevealerElementsManager implements IElementsManager {
     private updateScopes = () => {
         let index = this.displayFrom;
 
-        for (let rev of this.revealers) {
-            for (let item of rev.Items) {
-                // TODO: check addition and removal
+        for (let revealer of this.revealers) {
+            for (let i = 0; i < this.revealerSize; i++) {
+                const hasItemToBind = index < this.collection.length;
+                const hasElementToBind = revealer.Items.length > i;
 
-                item.Scope[this.descriptor.IndexString] = this.collection[index];
+                if (hasItemToBind && hasElementToBind) {
+                    // nothing special, bind scope
+                    revealer.Items[i].Scope[this.descriptor.IndexString] = this.collection[index];
+                } else if (hasItemToBind) {
+                    // create element and bind
+                    const item = this.transcludeElement(index);
+                    revealer.Element.append(item.Element);
+                    revealer.Items.push(item);
+                } else if (hasElementToBind) {
+                    // remove element
+                    const item = revealer.Items.pop();
+                    item.Scope.$destroy();
+                    item.Element.remove();
+                } else {
+                    continue;
+                }
+
                 index++;
             }
+
+            if (revealer.Items.length == 0) {
+                // remove revealer if it's not necessary anymore
+                revealer.Element.remove();
+            }
+        }
+
+        const currentDisplayTo = this.displayTo;
+        this.displayTo = index;
+
+        if (index < currentDisplayTo && this.collection.length > index) {
+            // create new revealers if necessary
+            this.AddBottom();
+        } else {
+            // remove unnecessary revealers
+            this.revealers = this.revealers.filter(r => r.Items.length > 0);
         }
     }
 
@@ -75,9 +108,11 @@ class RevealerElementsManager implements IElementsManager {
             const blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
 
             if (blockBottom > fillUntil) {
-                // oops too much...
+                /* 
+                    i had no better idea how to detect bottom line for the case of using floats,
+                    so when the first element passes the line, let's just correct it by removing that one
+                 */
                 const item = newRevealer.Items.pop();
-
                 item.Scope.$destroy();
                 item.Element.remove();
 
@@ -145,7 +180,7 @@ class RevealerElementsManager implements IElementsManager {
 
         while (revealer.Items.length > 0) {
             const item = revealer.Items.pop();
-            item.Element.remove(); // TODO: might be unnecessary
+            item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
             item.Scope.$destroy();
         }
 
@@ -162,7 +197,7 @@ class RevealerElementsManager implements IElementsManager {
 
         while (revealer.Items.length > 0) {
             const item = revealer.Items.pop();
-            item.Element.remove(); // TODO: might be unnecessary
+            item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
             item.Scope.$destroy();
         }
 
