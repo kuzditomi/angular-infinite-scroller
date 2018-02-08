@@ -1,12 +1,12 @@
-/// <reference path="descriptor.ts" />
-/// <reference path="scroll-detector.ts" />
-/// <reference path="elements-manager.ts" />
+import { Descriptor } from "./descriptor";
+import { ScrollDetector } from "./scroll-detector";
+import { ElementsManager } from "./elements-manager";
 
-interface IScroller {
+export interface IScroller {
 
 }
 
-class Scroller implements IScroller {
+export class Scroller implements IScroller {
     private get scope(): ng.IScope {
         return this.descriptor.Scope;
     }

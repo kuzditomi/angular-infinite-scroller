@@ -1,11 +1,11 @@
-/// <reference path="descriptor.ts" />
+import { Descriptor } from "./descriptor";
 
 type Item = {
     Element: JQLite,
     Scope: ng.IScope
 }
 
-class ElementsManager {
+export class ElementsManager {
     private collection: any[];
     private container: JQLite;
     private containerElement: HTMLElement;
