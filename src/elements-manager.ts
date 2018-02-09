@@ -1,4 +1,5 @@
 import { Descriptor } from "./descriptor";
+import { IDOMManager } from "./dom-manager";
 
 export type Item = {
     Element: JQLite,
@@ -15,8 +16,6 @@ export interface IElementsManager {
 
 export class ElementsManager implements IElementsManager {
     private collection: any[];
-    private container: JQLite;
-    private containerElement: HTMLElement;
     private items: Item[];
     private displayFrom: number;
     private displayTo: number;
@@ -24,12 +23,10 @@ export class ElementsManager implements IElementsManager {
     private BUFFER_COUNT = 5;
     private LOAD_COUNT = 10;
 
-    constructor(private descriptor: Descriptor, private linker: ng.ITranscludeFunction) {
+    constructor(private descriptor: Descriptor, private domManager: IDOMManager, private linker: ng.ITranscludeFunction) {
         this.items = [];
         this.displayFrom = 0;
         this.displayTo = 0;
-        this.container = descriptor.Element.parent();
-        this.containerElement = this.container[0];
 
         // this way the memory can only leak until the scroller lives
         this.descriptor.Scope.$on('$destroy', () => {
@@ -52,7 +49,7 @@ export class ElementsManager implements IElementsManager {
 
         for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
             const newElement = this.transcludeElement(i);
-            this.container.prepend(newElement.Element);
+            this.domManager.PrependElementToContainer(newElement.Element);
             this.items.unshift(newElement);
 
             countTillStop--;
@@ -67,12 +64,12 @@ export class ElementsManager implements IElementsManager {
 
         for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
             const item = this.transcludeElement(i);
-            this.container.append(item.Element);
+            this.domManager.AppendElementToContainer(item.Element);
             this.items.push(item);
 
-            const blockEl = item.Element[0];
-            const parentBottom = this.containerElement.offsetTop + this.containerElement.scrollTop + this.containerElement.offsetHeight;
-            const blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
+            const blockEl = item.Element;
+            const parentBottom = this.domManager.GetScrollBottomPosition();
+            const blockBottom = this.domManager.GetElementBottomPosition(blockEl);
 
             if (blockBottom > parentBottom) {
                 overflowCounter--;
@@ -89,9 +86,9 @@ export class ElementsManager implements IElementsManager {
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.BUFFER_COUNT].Element[0];
-            const elementBottom = el.offsetTop + el.offsetHeight;
-            const scrollTop = this.containerElement.offsetTop + this.containerElement.scrollTop;
+            const el = this.items[this.BUFFER_COUNT].Element;
+            const elementBottom = this.domManager.GetElementBottomPosition(el);
+            const scrollTop = this.domManager.GetScrollTopPosition();
 
             if (elementBottom < scrollTop) {
                 this.removeElement(0);
@@ -109,9 +106,9 @@ export class ElementsManager implements IElementsManager {
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.items.length - this.BUFFER_COUNT].Element[0];
-            const elementTop = el.offsetTop;
-            const bottom = this.containerElement.offsetHeight + this.containerElement.scrollTop + this.containerElement.offsetHeight;
+            const el = this.items[this.items.length - this.BUFFER_COUNT].Element;
+            const elementTop = this.domManager.GetElementTopPosition(el);
+            const bottom = this.domManager.GetScrollBottomPosition();
 
             if (elementTop > bottom) {
                 this.removeElement(this.items.length - 1);
@@ -147,7 +144,7 @@ export class ElementsManager implements IElementsManager {
 
     private removeElement = (index: number) => {
         const item = this.items.splice(index, 1)[0];
-        item.Element.remove();
+        this.domManager.Remove(item.Element);
         item.Scope.$destroy();
     }
 }
