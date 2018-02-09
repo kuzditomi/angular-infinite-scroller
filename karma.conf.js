@@ -15,7 +15,10 @@ module.exports = function (config) {
             }
         },
         singleRun: true,
-        reporters: ["progress", "karma-typescript"],
+        reporters: [ "spec",  /*"karma-typescript"*/, "travis-fold"],
+        travisFoldReporter: {
+            foldName: 'testresults',
+        },
         browsers: ["Chrome"]
     });
 };

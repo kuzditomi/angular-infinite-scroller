@@ -1,6 +1,6 @@
 import { Descriptor } from "../src/descriptor";
 
-describe("Descriptor creation", function () {
+describe("Descriptor", function () {
     it("parses collection and index strings properly", function () {
         const scope = {} as ng.IScope;
         const element = {} as JQLite;

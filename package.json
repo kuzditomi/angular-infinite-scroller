@@ -26,6 +26,8 @@
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
+    "karma-spec-reporter": "0.0.32",
+    "karma-travis-fold-reporter": "1.0.1",
     "karma-typescript": "3.0.12",
     "path": "0.12.7",
     "ts-loader": "3.3.1",
