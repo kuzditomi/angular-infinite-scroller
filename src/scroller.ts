@@ -1,14 +1,12 @@
-/// <reference path="descriptor.ts" />
-/// <reference path="scroll-detector.ts" />
-/// <reference path="elements-manager.ts" />
+import { Descriptor } from "./descriptor";
+import { ScrollDetector } from "./scroll-detector";
+import { IElementsManager } from "./elements-manager";
 
-interface IScroller {
-    onScrollDown(): void;
-    onScrollUp(): void;
-    onCollectionUpdated(newCollection: any[]): void;
+export interface IScroller {
+
 }
 
-class Scroller implements IScroller {
+export class Scroller implements IScroller {
     private get scope(): ng.IScope {
         return this.descriptor.Scope;
     }
@@ -18,22 +16,22 @@ class Scroller implements IScroller {
         this.scrollDetector.OnScrollUp = this.onScrollUp;
 
         this.scrollDetector.SubscribeTo(descriptor.Element);
-
+        
         this.scope.$watchCollection(descriptor.CollectionString, this.onCollectionUpdated);
     }
 
-    onCollectionUpdated = (newCollection: any[]): void => {
+    private onCollectionUpdated = (newCollection: any[]): void => {
         this.elementsManager.UpdateCollection(newCollection);
     };
 
-    onScrollDown = (): void => {
+    private onScrollDown = (): void => {
         this.scope.$apply(() => {
             this.elementsManager.AddBottom();
             this.elementsManager.RemoveTop();
         });
     };
 
-    onScrollUp = (): void => {
+    private onScrollUp = (): void => {
         this.scope.$apply(() => {
             this.elementsManager.AddTop();
             this.elementsManager.RemoveBottom();

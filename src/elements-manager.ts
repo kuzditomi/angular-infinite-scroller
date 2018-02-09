@@ -1,11 +1,11 @@
-/// <reference path="descriptor.ts" />
+import { Descriptor } from "./descriptor";
 
-type Item = {
+export type Item = {
     Element: JQLite,
     Scope: ng.IScope
 }
 
-interface IElementsManager {
+export interface IElementsManager {
     UpdateCollection(newCollection: any[]): void;
     AddTop(): void;
     AddBottom(): void;
@@ -13,7 +13,7 @@ interface IElementsManager {
     RemoveBottom(): void;
 }
 
-class ElementsManager implements IElementsManager {
+export class ElementsManager implements IElementsManager {
     private collection: any[];
     private container: JQLite;
     private containerElement: HTMLElement;
@@ -42,7 +42,6 @@ class ElementsManager implements IElementsManager {
             this.collection = newCollection;
             this.AddBottom();
         } else {
-            // there is some memory-leak when removing elements from the collection, but this is low priority for now :(
             this.collection = newCollection;
             this.updateScopes();
         }

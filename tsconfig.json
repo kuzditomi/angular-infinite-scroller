@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "none",
-        "sourceMap": true,
-        "outFile": "dist/angular-infinite-scroll.js"
-    }
+        "module": "commonjs",
+        "sourceMap": true
+    },
+    "exclude": [
+		"node_modules"
+	]
 }

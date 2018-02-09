@@ -4,9 +4,8 @@
   "description": "",
   "main": "src/angular-infinite-scroll.min.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "test": "karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -18,13 +17,20 @@
     "url": "https://github.com/kuzditomi/angular-infinite-scroller/issues"
   },
   "homepage": "https://github.com/kuzditomi/angular-infinite-scroller#readme",
-  "dependencies": {
-    "typescript": "2.6.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/angular": "1.6.41",
-    "angular": "^1.6.8",
-    "ts-loader": "^3.3.1",
-    "webpack": "^3.10.0"
+    "@types/jasmine": "2.8.6",
+    "angular": "1.6.8",
+    "jasmine": "3.0.0",
+    "karma": "2.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-jasmine": "1.1.1",
+    "karma-typescript": "3.0.12",
+    "path": "0.12.7",
+    "ts-loader": "3.3.1",
+    "typescript": "2.6.2",
+    "uglifyjs-webpack-plugin": "1.1.8",
+    "webpack": "3.10.0"
   }
 }

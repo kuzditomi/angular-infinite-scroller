@@ -1,7 +1,10 @@
-/// <reference path="descriptor.ts" />
-/// <reference path="scroller.ts" />
+import { Descriptor } from "./descriptor";
+import { ScrollDetector } from "./scroll-detector";
+import { ElementsManager } from "./elements-manager";
+import { Scroller, IScroller } from "./scroller";
+import { RevealerElementsManager } from "./revealer-elements-manager";
 
-class ScrollerFactory {
+export class ScrollerFactory {
     static createFrom(descriptor: Descriptor, linker: ng.ITranscludeFunction): IScroller {
         const detector = new ScrollDetector();
 

@@ -1,6 +1,7 @@
-/// <reference path="descriptor.ts" />
-/// <reference path="scroller-factory.ts" />
-/// <reference path="elements-manager.ts" />
+import { Descriptor } from './descriptor';
+import { ScrollerFactory } from "./scroller-factory";
+
+declare var angular;
 
 const scrollerModule = angular.module('angular-infinite-scroller', []);
 

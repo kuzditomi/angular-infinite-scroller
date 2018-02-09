@@ -1,12 +1,14 @@
-/// <reference path="descriptor.ts" />
-/// <reference path="elements-manager.ts" />
+import { Item, IElementsManager } from "./elements-manager";
+import { Descriptor } from "./descriptor";
+
+declare var angular;
 
 type Revealer = {
     Element: JQLite;
     Items: Item[];
 }
 
-class RevealerElementsManager implements IElementsManager {
+export class RevealerElementsManager implements IElementsManager {
     private collection: any[];
     private container: JQLite;
     private containerElement: HTMLElement;

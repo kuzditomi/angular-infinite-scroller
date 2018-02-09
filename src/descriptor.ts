@@ -1,4 +1,4 @@
-class Descriptor {
+export class Descriptor {
     private constructor() { }
 
     public CollectionString: string

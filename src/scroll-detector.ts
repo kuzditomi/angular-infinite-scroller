@@ -1,4 +1,4 @@
-class ScrollDetector {
+export class ScrollDetector {
     private lastScrollTop = 0;
     private BUFFER_COUNT = 5;
 
