@@ -11,7 +11,7 @@ export class Scroller {
         this.scrollDetector.OnScrollDown = this.onScrollDown;
         this.scrollDetector.OnScrollUp = this.onScrollUp;
 
-        this.scrollDetector.SubscribeTo(descriptor.Element);
+        this.scrollDetector.SubscribeToElement();
         
         this.scope.$watchCollection(descriptor.CollectionString, this.onCollectionUpdated);
     }

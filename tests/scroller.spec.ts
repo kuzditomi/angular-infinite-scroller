@@ -9,7 +9,7 @@ describe("Scroller", function () {
         descriptorMock: Descriptor;
 
     beforeEach(function () {
-        scrollDetectorMock = jasmine.createSpyObj<ScrollDetector>('scrollDetectorMock', ['SubscribeTo']);
+        scrollDetectorMock = jasmine.createSpyObj<ScrollDetector>('scrollDetectorMock', ['SubscribeToElement']);
         scopeMock = jasmine.createSpyObj<ng.IScope>('scopeMock', ['$watchCollection', '$apply']);
 
         descriptorMock = {

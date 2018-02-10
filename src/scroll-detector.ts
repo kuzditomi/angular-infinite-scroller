@@ -2,12 +2,12 @@ export class ScrollDetector {
     private lastScrollTop = 0;
     private BUFFER_COUNT = 5;
 
-    constructor() {
+    constructor(private element: JQLite) {
 
     }
 
-    public SubscribeTo = (element: JQLite) => {
-        const parent: JQLite = element.parent();
+    public SubscribeToElement = () => {
+        const parent: JQLite = this.element.parent();
         const parentEl: HTMLElement = parent[0];
 
         parent.bind('scroll', () => {

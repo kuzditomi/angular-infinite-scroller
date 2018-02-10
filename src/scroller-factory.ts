@@ -6,16 +6,13 @@ import { RevealerElementsManager } from "./revealer-elements-manager";
 import { DOMManager } from "./dom-manager";
 
 export class ScrollerFactory {
-    static createFrom(descriptor: Descriptor, linker: ng.ITranscludeFunction): Scroller {
-        const detector = new ScrollDetector();
-        const domManager = new DOMManager(descriptor.Element.parent());
-
+    static createFrom(descriptor: Descriptor, domManager: DOMManager, linker: ng.ITranscludeFunction, scrollDetector: ScrollDetector): Scroller {
         if (descriptor.UseRevealer) {
-            const elementsManager = new RevealerElementsManager(descriptor, linker);
-            return new Scroller(descriptor, detector, elementsManager);
+            const elementsManager = new RevealerElementsManager(descriptor, domManager, linker);
+            return new Scroller(descriptor, scrollDetector, elementsManager);
         } else {
             const elementsManager = new ElementsManager(descriptor, domManager, linker);
-            return new Scroller(descriptor, detector, elementsManager);
+            return new Scroller(descriptor, scrollDetector, elementsManager);
         }
     }
 }

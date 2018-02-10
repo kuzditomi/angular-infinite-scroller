@@ -32,9 +32,8 @@ export class Descriptor {
     public IndexString: string;
     public UseRevealer: boolean;
     public Scope: ng.IScope;
-    public Element: JQLite;
 
-    static createFrom(scope: ng.IScope, element: JQLite, attr: ng.IAttributes): Descriptor {
+    static createFrom(scope: ng.IScope, attr: ng.IAttributes): Descriptor {
         const loop = attr.infiniteScroller,
             match = loop.match(/^\s*(.+)\s+in\s+(.*?)$/),
             indexString = match[1],
@@ -46,7 +45,6 @@ export class Descriptor {
         descriptor.CollectionString = collectionString;
         descriptor.IndexString = indexString;
         descriptor.UseRevealer = attr['useRevealer'] != undefined;
-        descriptor.Element = element;
         descriptor.Scope = scope;
         descriptor.Settings = settings;
 

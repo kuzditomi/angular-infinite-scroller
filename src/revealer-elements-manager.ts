@@ -1,5 +1,6 @@
 import { Item, IElementsManager } from "./elements-manager";
 import { Descriptor } from "./descriptor";
+import { DOMManager } from "./dom-manager";
 
 declare var angular;
 
@@ -10,8 +11,6 @@ type Revealer = {
 
 export class RevealerElementsManager implements IElementsManager {
     private collection: any[];
-    private container: JQLite;
-    private containerElement: HTMLElement;
     private displayFrom: number;
     private displayTo: number;
 
@@ -22,10 +21,8 @@ export class RevealerElementsManager implements IElementsManager {
     private LOAD_COUNT = 10;
     private REVEALER_SIZE_TO_CONTAINER = 0.75
 
-    constructor(private descriptor: Descriptor, private linker: ng.ITranscludeFunction) {
+    constructor(private descriptor: Descriptor, private domManager: DOMManager, private linker: ng.ITranscludeFunction) {
         this.revealers = [];
-        this.container = descriptor.Element.parent();
-        this.containerElement = this.container[0];
         this.displayFrom = 0;
         this.displayTo = 0;
 
@@ -95,7 +92,7 @@ export class RevealerElementsManager implements IElementsManager {
     public InitializeRevealer = () => {
         const newRevealer = this.createRevealer();
         this.revealers.push(newRevealer);
-        this.container.append(newRevealer.Element);
+        this.domManager.AppendElementToContainer(newRevealer.Element);
 
         let i = 0;
         let isRevealerFilled = false;
@@ -106,8 +103,8 @@ export class RevealerElementsManager implements IElementsManager {
             newRevealer.Items.push(item);
 
             const blockEl = item.Element[0];
-            const fillUntil = this.containerElement.offsetTop + this.containerElement.offsetHeight * this.REVEALER_SIZE_TO_CONTAINER;
-            const blockBottom = blockEl.offsetTop + blockEl.offsetHeight;
+            const fillUntil = this.domManager.GetRelativePositionOf(this.REVEALER_SIZE_TO_CONTAINER);
+            const blockBottom = this.domManager.GetElementBottomPosition(item.Element);
 
             if (blockBottom > fillUntil) {
                 /* 
@@ -136,7 +133,7 @@ export class RevealerElementsManager implements IElementsManager {
 
         const newRevealer = this.createRevealer();
         this.revealers.unshift(newRevealer);
-        this.container.prepend(newRevealer.Element);
+        this.domManager.PrependElementToContainer(newRevealer.Element);
 
         let countTillStop = this.LOAD_COUNT;
 
@@ -161,7 +158,7 @@ export class RevealerElementsManager implements IElementsManager {
 
         const newRevealer = this.createRevealer();
         this.revealers.push(newRevealer);
-        this.container.append(newRevealer.Element);
+        this.domManager.AppendElementToContainer(newRevealer.Element);
 
         for (var i = 0; i < this.revealerSize && this.displayTo + i < this.collection.length; i++) {
             const item = this.transcludeElement(this.displayTo + i);
@@ -204,7 +201,7 @@ export class RevealerElementsManager implements IElementsManager {
         }
 
         revealer.Element.remove();
-        this.containerElement.scrollTo(0, this.containerElement.offsetHeight / 2);
+        this.domManager.FixScroll(0.5);
     };
 
     private transcludeElement = (index: number): Item => {
