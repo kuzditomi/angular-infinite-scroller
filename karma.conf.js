@@ -10,12 +10,21 @@ module.exports = function (config) {
             "**/*.ts": "karma-typescript",
         },
         karmaTypescriptConfig: {
+            reports: {
+                'html': 'coverage',
+                'lcovonly': {
+                    'directory': 'coverage',
+                    'subdirectory': '.',
+                    'filename': 'lcov.info'
+                },
+                'text-summary': ''
+            },
             coverageOptions: {
                 exclude: /tests/
             }
         },
         singleRun: true,
-        reporters: [ "spec", "karma-typescript", "travis-fold"],
+        reporters: ["spec", "karma-typescript", "travis-fold"],
         travisFoldReporter: {
             foldName: 'testresults',
         },

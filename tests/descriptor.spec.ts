@@ -1,24 +1,26 @@
 import { Descriptor } from "../src/descriptor";
 
 describe("Descriptor", function () {
-    it("parses collection and index strings properly", function () {
-        // Arrange
-        const scope = {} as ng.IScope;
-        const element = {} as JQLite;
-        const attr = {
-            infiniteScroller: 'something in somecollection'
-        } as any as ng.IAttributes;
+    describe('regex', function () {
+        it("parses collection and index strings properly", function () {
+            // Arrange
+            const scope = {} as ng.IScope;
+            const element = {} as JQLite;
+            const attr = {
+                infiniteScroller: 'something in somecollection'
+            } as any as ng.IAttributes;
 
-        // Act
-        const descriptor = Descriptor.createFrom(scope, element, attr);
+            // Act
+            const descriptor = Descriptor.createFrom(scope, element, attr);
 
-        // Assert
-        expect(descriptor.IndexString).toEqual('something');
-        expect(descriptor.CollectionString).toEqual('somecollection');
+            // Assert
+            expect(descriptor.IndexString).toEqual('something');
+            expect(descriptor.CollectionString).toEqual('somecollection');
+        });
     });
 
     describe('buffer size', function () {
-        it('is initialized for default value', function(){
+        it('is initialized for default value', function () {
             // Arrange
             const scope = {} as ng.IScope;
             const element = {} as JQLite;
