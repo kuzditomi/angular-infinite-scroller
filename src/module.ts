@@ -7,6 +7,8 @@ const scrollerModule = angular.module('angular-infinite-scroller', []);
 
 scrollerModule.directive('infiniteScroller', () => {
     return {
+        priority: 1000,
+        restrict: 'A',
         transclude: 'element',
         link: (scope: ng.IScope, element: JQLite, attr: ng.IAttributes, ctrl, linker: ng.ITranscludeFunction) => {
             const descriptor = Descriptor.createFrom(scope, element, attr);
