@@ -2,11 +2,7 @@ import { Descriptor } from "./descriptor";
 import { ScrollDetector } from "./scroll-detector";
 import { IElementsManager } from "./elements-manager";
 
-export interface IScroller {
-
-}
-
-export class Scroller implements IScroller {
+export class Scroller {
     private get scope(): ng.IScope {
         return this.descriptor.Scope;
     }
