@@ -20,9 +20,6 @@ export class ElementsManager implements IElementsManager {
     private displayFrom: number;
     private displayTo: number;
 
-    private BUFFER_COUNT = 5;
-    private LOAD_COUNT = 10;
-
     constructor(private descriptor: Descriptor, private domManager: IDOMManager, private linker: ng.ITranscludeFunction) {
         this.items = [];
         this.displayFrom = 0;
@@ -45,7 +42,7 @@ export class ElementsManager implements IElementsManager {
     }
 
     public AddTop = () => {
-        let countTillStop = this.LOAD_COUNT;
+        let countTillStop = this.descriptor.Settings.BufferSize;
 
         for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
             const newElement = this.transcludeElement(i);
@@ -60,7 +57,7 @@ export class ElementsManager implements IElementsManager {
 
     public AddBottom = () => {
         // add this many children below visible area
-        let overflowCounter = this.items.length > 0 ? this.BUFFER_COUNT : this.LOAD_COUNT;
+        let overflowCounter = this.descriptor.Settings.BufferSize;
 
         for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
             const item = this.transcludeElement(i);
@@ -80,13 +77,13 @@ export class ElementsManager implements IElementsManager {
     };
 
     public RemoveTop = () => {
-        if (this.items.length < this.BUFFER_COUNT) {
+        if (this.items.length < this.descriptor.Settings.BufferSize) {
             return;
         }
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.BUFFER_COUNT].Element;
+            const el = this.items[this.descriptor.Settings.BufferSize].Element;
             const elementBottom = this.domManager.GetElementBottomPosition(el);
             const scrollTop = this.domManager.GetScrollTopPosition();
 
@@ -100,13 +97,13 @@ export class ElementsManager implements IElementsManager {
     };
 
     public RemoveBottom = () => {
-        if (this.items.length < this.BUFFER_COUNT) {
+        if (this.items.length < this.descriptor.Settings.BufferSize) {
             return;
         }
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.items.length - this.BUFFER_COUNT].Element;
+            const el = this.items[this.items.length - this.descriptor.Settings.BufferSize].Element;
             const elementTop = this.domManager.GetElementTopPosition(el);
             const bottom = this.domManager.GetScrollBottomPosition();
 

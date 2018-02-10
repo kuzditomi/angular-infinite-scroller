@@ -15,7 +15,7 @@ module.exports = function (config) {
             }
         },
         singleRun: true,
-        reporters: [ "spec",  /*"karma-typescript"*/, "travis-fold"],
+        reporters: [ "spec", "karma-typescript", "travis-fold"],
         travisFoldReporter: {
             foldName: 'testresults',
         },
