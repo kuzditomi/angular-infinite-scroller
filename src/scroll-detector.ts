@@ -1,16 +1,15 @@
+import { DOMManager } from "./dom-manager";
+
 export class ScrollDetector {
     private lastScrollTop = 0;
     private BUFFER_COUNT = 5;
 
-    constructor() {
+    constructor(private element: JQLite) { }
 
-    }
+    public SubscribeToElement = () => {
+        const parentEl: HTMLElement = this.element.parent()[0];
 
-    public SubscribeTo = (element: JQLite) => {
-        const parent: JQLite = element.parent();
-        const parentEl: HTMLElement = parent[0];
-
-        parent.bind('scroll', () => {
+        parentEl.onscroll = () => {
             if (this.lastScrollTop < parentEl.scrollTop) {
                 const current = parentEl.scrollTop + parentEl.offsetHeight;
                 const bottom = parentEl.scrollHeight;
@@ -20,13 +19,12 @@ export class ScrollDetector {
                 }
             } else if (this.lastScrollTop > parentEl.scrollTop) {
                 const topElement = parentEl.children[0];
-
-                if (parentEl.scrollTop < (topElement.scrollHeight * this.BUFFER_COUNT)) {
+                if (parentEl.scrollTop <= (topElement.clientHeight * this.BUFFER_COUNT)) {
                     this.OnScrollUp && this.OnScrollUp();
                 }
             }
-            this.lastScrollTop = parent[0].scrollTop;
-        });
+            this.lastScrollTop = parentEl.scrollTop;
+        };
     }
 
     public OnScrollDown?: () => void;

@@ -1,18 +1,18 @@
 import { Descriptor } from "./descriptor";
 import { ScrollDetector } from "./scroll-detector";
 import { ElementsManager } from "./elements-manager";
-import { RevealerScroller } from "./revealer-scroller";
-import { Scroller, IScroller } from "./scroller";
+import { Scroller } from "./scroller";
+import { RevealerElementsManager } from "./revealer-elements-manager";
+import { DOMManager } from "./dom-manager";
 
 export class ScrollerFactory {
-    static createFrom(descriptor: Descriptor, linker: ng.ITranscludeFunction): IScroller {
-        const detector = new ScrollDetector();
-        const elementsManager = new ElementsManager(descriptor, linker);
-
+    static createFrom(descriptor: Descriptor, domManager: DOMManager, linker: ng.ITranscludeFunction, scrollDetector: ScrollDetector): Scroller {
         if (descriptor.UseRevealer) {
-            return new RevealerScroller(descriptor, detector, elementsManager);
+            const elementsManager = new RevealerElementsManager(descriptor, domManager, linker);
+            return new Scroller(descriptor, scrollDetector, elementsManager);
+        } else {
+            const elementsManager = new ElementsManager(descriptor, domManager, linker);
+            return new Scroller(descriptor, scrollDetector, elementsManager);
         }
-
-        return new Scroller(descriptor, detector, elementsManager);
     }
 }

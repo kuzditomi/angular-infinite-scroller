@@ -1,27 +1,34 @@
 import { Descriptor } from "./descriptor";
+import { IDOMManager } from "./dom-manager";
 
-type Item = {
+export type Item = {
     Element: JQLite,
     Scope: ng.IScope
 }
 
-export class ElementsManager {
+export interface IElementsManager {
+    UpdateCollection(newCollection: any[]): void;
+    AddTop(): void;
+    AddBottom(): void;
+    RemoveTop(): void;
+    RemoveBottom(): void;
+}
+
+export class ElementsManager implements IElementsManager {
     private collection: any[];
-    private container: JQLite;
-    private containerElement: HTMLElement;
     private items: Item[];
     private displayFrom: number;
     private displayTo: number;
 
-    private BUFFER_COUNT = 5;
-    private LOAD_COUNT = 10;
-
-    constructor(private descriptor: Descriptor, private linker: ng.ITranscludeFunction) {
+    constructor(private descriptor: Descriptor, private domManager: IDOMManager, private linker: ng.ITranscludeFunction) {
         this.items = [];
         this.displayFrom = 0;
         this.displayTo = 0;
-        this.container = descriptor.Element.parent();
-        this.containerElement = this.container[0];
+
+        // this way the memory can only leak until the scroller lives
+        this.descriptor.Scope.$on('$destroy', () => {
+            this.items = [];
+        });
     }
 
     public UpdateCollection = (newCollection: any[]) => {
@@ -35,14 +42,11 @@ export class ElementsManager {
     }
 
     public AddTop = () => {
-        let countTillStop = this.LOAD_COUNT;
+        let countTillStop = this.descriptor.Settings.BufferSize;
 
         for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
-            const childScope = this.descriptor.Scope.$new();
-            childScope[this.descriptor.IndexString] = this.collection[i];
-
-            const newElement = this.transcludeElement(childScope, i);
-            this.container.prepend(newElement.Element);
+            const newElement = this.transcludeElement(i);
+            this.domManager.PrependElement(newElement.Element);
             this.items.unshift(newElement);
 
             countTillStop--;
@@ -53,19 +57,16 @@ export class ElementsManager {
 
     public AddBottom = () => {
         // add this many children below visible area
-        let overflowCounter = this.items.length > 0 ? this.BUFFER_COUNT : this.LOAD_COUNT;
+        let overflowCounter = this.descriptor.Settings.BufferSize;
 
         for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
-            const childScope = this.descriptor.Scope.$new();
-            childScope[this.descriptor.IndexString] = this.collection[i];
-
-            const item = this.transcludeElement(childScope, i);
-            this.container.append(item.Element);
+            const item = this.transcludeElement(i);
+            this.domManager.AppendElement(item.Element);
             this.items.push(item);
 
-            const blockEl = item.Element[0];
-            const parentBottom = this.containerElement.offsetTop + this.containerElement.scrollTop + this.containerElement.offsetHeight;
-            const blockBottom = this.containerElement.offsetTop + blockEl.offsetTop + blockEl.offsetHeight;
+            const blockEl = item.Element;
+            const parentBottom = this.domManager.GetScrollBottomPosition();
+            const blockBottom = this.domManager.GetElementBottomPosition(blockEl);
 
             if (blockBottom > parentBottom) {
                 overflowCounter--;
@@ -76,15 +77,15 @@ export class ElementsManager {
     };
 
     public RemoveTop = () => {
-        if (this.items.length < this.BUFFER_COUNT) {
+        if (this.items.length < this.descriptor.Settings.BufferSize) {
             return;
         }
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.BUFFER_COUNT].Element[0];
-            const elementBottom = el.offsetTop + el.offsetHeight;
-            const scrollTop = this.containerElement.offsetTop + this.containerElement.scrollTop;
+            const el = this.items[this.descriptor.Settings.BufferSize].Element;
+            const elementBottom = this.domManager.GetElementBottomPosition(el);
+            const scrollTop = this.domManager.GetScrollTopPosition();
 
             if (elementBottom < scrollTop) {
                 this.removeElement(0);
@@ -96,15 +97,15 @@ export class ElementsManager {
     };
 
     public RemoveBottom = () => {
-        if (this.items.length < this.BUFFER_COUNT) {
+        if (this.items.length < this.descriptor.Settings.BufferSize) {
             return;
         }
 
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
-            const el = this.items[this.items.length - this.BUFFER_COUNT].Element[0];
-            const elementTop = el.offsetTop;
-            const bottom = this.containerElement.offsetHeight + this.containerElement.scrollTop + this.containerElement.offsetHeight;
+            const el = this.items[this.items.length - this.descriptor.Settings.BufferSize].Element;
+            const elementTop = this.domManager.GetElementTopPosition(el);
+            const bottom = this.domManager.GetScrollBottomPosition();
 
             if (elementTop > bottom) {
                 this.removeElement(this.items.length - 1);
@@ -120,10 +121,15 @@ export class ElementsManager {
             const item = this.items[i];
             item.Scope[this.descriptor.IndexString] = this.collection[this.displayFrom + i];
         }
+
+        // TODO: clean dom if removal took place 
     };
 
-    private transcludeElement = (childScope: ng.IScope, index: number): Item => {
+    private transcludeElement = (index: number): Item => {
         const item = {} as Item;
+
+        const childScope = this.descriptor.Scope.$new();
+        childScope[this.descriptor.IndexString] = this.collection[index];
 
         this.linker(childScope, (clone: JQLite) => {
             item.Element = clone;
@@ -135,7 +141,7 @@ export class ElementsManager {
 
     private removeElement = (index: number) => {
         const item = this.items.splice(index, 1)[0];
-        item.Element.remove();
+        this.domManager.Remove(item.Element);
         item.Scope.$destroy();
     }
 }

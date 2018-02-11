@@ -12,24 +12,15 @@ module.exports = function (config) {
         },
         karmaTypescriptConfig: {
             tsconfig: './tsconfig.json',
-            reports: {
-                'html': 'coverage',
-                'lcovonly': {
-                    'directory': 'coverage',
-                    'subdirectory': '.',
-                    'filename': 'lcov.info'
-                },
-                'text-summary': ''
+            bundlerOptions: {
+                sourceMap: true,
             },
             coverageOptions: {
-                exclude: /tests/
+                exclude: /tests/,
+                instrumentation: false
             }
         },
-        singleRun: true,
-        reporters: ["spec", "karma-typescript", "travis-fold"],
-        travisFoldReporter: {
-            foldName: 'testresults',
-        },
+        singleRun: false,
         browsers: ["Chrome"]
     });
 };
