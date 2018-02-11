@@ -32,13 +32,9 @@ export class ElementsManager implements IElementsManager {
     }
 
     public UpdateCollection = (newCollection: any[]) => {
-        if (this.collection == undefined) {
-            this.collection = newCollection;
-            this.AddBottom();
-        } else {
-            this.collection = newCollection;
-            this.updateScopes();
-        }
+        this.collection = newCollection;
+        this.AddBottom();
+        this.updateScopes();
     }
 
     public AddTop = () => {
@@ -56,6 +52,18 @@ export class ElementsManager implements IElementsManager {
     };
 
     public AddBottom = () => {
+        const parentBottom = this.domManager.GetScrollBottomPosition();
+
+        // don't add more if elements are already out of sight
+        if (this.items.length > 0) {
+            const lastItem = this.items[this.items.length - 1];
+            const lastItemBottom = this.domManager.GetElementBottomPosition(lastItem.Element);
+
+            if (lastItemBottom > parentBottom) {
+                return;
+            }
+        }
+
         // add this many children below visible area
         let overflowCounter = this.descriptor.Settings.BufferSize;
 
@@ -65,7 +73,6 @@ export class ElementsManager implements IElementsManager {
             this.items.push(item);
 
             const blockEl = item.Element;
-            const parentBottom = this.domManager.GetScrollBottomPosition();
             const blockBottom = this.domManager.GetElementBottomPosition(blockEl);
 
             if (blockBottom > parentBottom) {

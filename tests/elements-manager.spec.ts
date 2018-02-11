@@ -17,7 +17,7 @@ describe("Elements manager", function () {
 
         scopeMock = jasmine.createSpyObj<ng.IScope>('scopeMock', ['$on', '$new']);
 
-        linkerMock = function () { } as ng.ITranscludeFunction;
+        linkerMock = (_, linkCallback) => linkCallback();
 
         descriptorMock = {
             IndexString: 'item',
@@ -76,11 +76,29 @@ describe("Elements manager", function () {
             // Assert
             expect(createdChildScopes).toEqual(expectedChildScopes);
         });
+
+        it("populates container element with 'late' initialization too", function () {
+            // Arrange
+            scopeMock.$new.and.returnValue({});
+            descriptorMock.Settings.BufferSize = 5;
+
+            domManagerMock.GetScrollBottomPosition.and.returnValue(120);
+            domManagerMock.GetElementBottomPosition.and.returnValues(80, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112);
+
+            const elementsManager = new ElementsManager(descriptorMock, domManagerMock, linkerMock);
+
+            // Act
+            elementsManager.UpdateCollection([]);
+            elementsManager.UpdateCollection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+            // Assert
+            expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(10);
+        });
     });
 
     describe("scroll down", function () {
         it("adds new elements", function () {
-            
+
         });
     });
 });

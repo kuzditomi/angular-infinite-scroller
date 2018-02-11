@@ -27,10 +27,10 @@ describe("Scroller factory", function () {
             }
         } as any as Descriptor;
 
-        const linkerMock = function () { } as ng.ITranscludeFunction;
+        const linkerMock = (_, linkCallback) => linkCallback();
 
         // Act
-        const createdScroller = ScrollerFactory.createFrom(descriptorMock, domManagerMock, linkerMock, scrollDetectorMock);
+        const createdScroller = ScrollerFactory.createFrom(descriptorMock, domManagerMock, linkerMock as ng.ITranscludeFunction, scrollDetectorMock);
         watchCallback([1, 2, 3])
 
         // Assert

@@ -10,7 +10,11 @@
             for (var i = 0; i < 100; i++) {
                 numbers.push(i);
             }
-            scope.items = numbers;
+            scope.items = [];
+
+            scope.fillItems = function () {
+                scope.items = numbers;
+            };
 
             // table
             let rows = [];
