@@ -71,7 +71,6 @@ describe("Scroller factory", function () {
         } as ng.ITranscludeFunction;
 
         // Act
-        debugger;
         const createdScroller = ScrollerFactory.createFrom(descriptorMock, domManagerMock, linkerMock, scrollDetectorMock);
         watchCallback([1, 2, 3, 4, 5])
 

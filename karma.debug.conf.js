@@ -3,6 +3,7 @@ module.exports = function (config) {
         frameworks: ["jasmine", "karma-typescript"],
         files: [
             "node_modules/angular/angular.min.js",
+            "node_modules/angular-mocks/angular-mocks.js",
             "src/**/*.ts",
             "tests/**/*.ts"
         ],
@@ -10,6 +11,7 @@ module.exports = function (config) {
             "**/*.ts": "karma-typescript",
         },
         karmaTypescriptConfig: {
+            tsconfig: './tsconfig.json',
             bundlerOptions: {
                 sourceMap: true,
             },

@@ -22,9 +22,11 @@
   "dependencies": {},
   "devDependencies": {
     "@types/angular": "1.6.41",
+    "@types/angular-mocks": "1.5.11",
     "@types/jasmine": "2.8.6",
     "angular": "1.6.8",
-    "coveralls": "^3.0.0",
+    "angular-mocks": "1.6.8",
+    "coveralls": "3.0.0",
     "jasmine": "3.0.0",
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",

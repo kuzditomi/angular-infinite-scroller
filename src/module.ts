@@ -5,7 +5,7 @@ import { ScrollDetector } from './scroll-detector';
 
 declare var angular;
 
-const scrollerModule = angular.module('angular-infinite-scroller', []);
+export const scrollerModule = angular.module('angular-infinite-scroller', []);
 
 scrollerModule.directive('infiniteScroller', () => {
     return {
