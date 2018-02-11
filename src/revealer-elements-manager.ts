@@ -2,8 +2,6 @@ import { Item, IElementsManager } from "./elements-manager";
 import { Descriptor } from "./descriptor";
 import { DOMManager } from "./dom-manager";
 
-declare var angular;
-
 type Revealer = {
     Element: JQLite;
     Items: Item[];
@@ -57,13 +55,13 @@ export class RevealerElementsManager implements IElementsManager {
                 } else if (hasItemToBind) {
                     // create element and bind
                     const item = this.transcludeElement(index);
-                    revealer.Element.append(item.Element);
+                    this.domManager.AppendElementToContainer(item.Element, revealer.Element);
                     revealer.Items.push(item);
                 } else if (hasElementToBind) {
                     // remove element
                     const item = revealer.Items.pop();
                     item.Scope.$destroy();
-                    item.Element.remove();
+                    this.domManager.Remove(item.Element);
                 } else {
                     continue;
                 }
@@ -73,7 +71,7 @@ export class RevealerElementsManager implements IElementsManager {
 
             if (revealer.Items.length == 0) {
                 // remove revealer if it's not necessary anymore
-                revealer.Element.remove();
+                this.domManager.Remove(revealer.Element);
             }
         }
 
@@ -92,17 +90,19 @@ export class RevealerElementsManager implements IElementsManager {
     public InitializeRevealer = () => {
         const newRevealer = this.createRevealer();
         this.revealers.push(newRevealer);
-        this.domManager.AppendElementToContainer(newRevealer.Element);
+        this.domManager.AppendElement(newRevealer.Element);
 
         let i = 0;
         let isRevealerFilled = false;
 
         while (!isRevealerFilled) {
+            if (i >= this.collection.length)
+                break;
+
             const item = this.transcludeElement(i);
-            newRevealer.Element.append(item.Element);
+            this.domManager.AppendElementToContainer(item.Element, newRevealer.Element);
             newRevealer.Items.push(item);
 
-            const blockEl = item.Element[0];
             const fillUntil = this.domManager.GetRelativePositionOf(this.REVEALER_SIZE_TO_CONTAINER);
             const blockBottom = this.domManager.GetElementBottomPosition(item.Element);
 
@@ -133,7 +133,7 @@ export class RevealerElementsManager implements IElementsManager {
 
         const newRevealer = this.createRevealer();
         this.revealers.unshift(newRevealer);
-        this.domManager.PrependElementToContainer(newRevealer.Element);
+        this.domManager.PrependElement(newRevealer.Element);
 
         let countTillStop = this.LOAD_COUNT;
 
@@ -144,7 +144,7 @@ export class RevealerElementsManager implements IElementsManager {
             }
 
             const newElement = this.transcludeElement(this.displayFrom - 1 - i);
-            newRevealer.Element.prepend(newElement.Element);
+            this.domManager.PrependElementToContainer(newElement.Element, newRevealer.Element);
             newRevealer.Items.unshift(newElement);
         }
 
@@ -152,13 +152,13 @@ export class RevealerElementsManager implements IElementsManager {
     };
 
     public AddBottom = () => {
-        if (this.displayTo == this.collection.length) {
+        if (this.displayTo >= this.collection.length) {
             return;
         }
 
         const newRevealer = this.createRevealer();
         this.revealers.push(newRevealer);
-        this.domManager.AppendElementToContainer(newRevealer.Element);
+        this.domManager.AppendElement(newRevealer.Element);
 
         for (var i = 0; i < this.revealerSize && this.displayTo + i < this.collection.length; i++) {
             const item = this.transcludeElement(this.displayTo + i);
@@ -196,11 +196,11 @@ export class RevealerElementsManager implements IElementsManager {
 
         while (revealer.Items.length > 0) {
             const item = revealer.Items.pop();
-            item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
+            this.domManager.Remove(item.Element);
             item.Scope.$destroy();
         }
 
-        revealer.Element.remove();
+        this.domManager.Remove(revealer.Element);
         this.domManager.FixScroll(0.5);
     };
 
@@ -219,7 +219,7 @@ export class RevealerElementsManager implements IElementsManager {
     }
 
     private createRevealer = (): Revealer => {
-        const revealerElement = angular.element('<div class="revealer"></div>');
+        const revealerElement = this.domManager.CreateRevealerElement();
 
         const revealer: Revealer = {
             Element: revealerElement,

@@ -46,7 +46,7 @@ export class ElementsManager implements IElementsManager {
 
         for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
             const newElement = this.transcludeElement(i);
-            this.domManager.PrependElementToContainer(newElement.Element);
+            this.domManager.PrependElement(newElement.Element);
             this.items.unshift(newElement);
 
             countTillStop--;
@@ -61,7 +61,7 @@ export class ElementsManager implements IElementsManager {
 
         for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
             const item = this.transcludeElement(i);
-            this.domManager.AppendElementToContainer(item.Element);
+            this.domManager.AppendElement(item.Element);
             this.items.push(item);
 
             const blockEl = item.Element;

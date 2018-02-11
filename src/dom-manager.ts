@@ -1,6 +1,12 @@
+declare var angular;
+
 export interface IDOMManager {
-    AppendElementToContainer(element: JQLite): void;
-    PrependElementToContainer(element: JQLite): void;
+    CreateRevealerElement(): JQLite;
+
+    AppendElement(element: JQLite): void;
+    PrependElement(element: JQLite): void;
+    AppendElementToContainer(element: JQLite,containerToAppend: JQLite): void;
+    PrependElementToContainer(element: JQLite, containerToPrepend: JQLite): void;
 
     GetScrollBottomPosition(): number;
     GetScrollTopPosition(): number;
@@ -14,13 +20,16 @@ export interface IDOMManager {
 }
 
 export class DOMManager implements IDOMManager {
-    
     private container: JQLite;
     private containerElement: HTMLElement;
 
     constructor(private element: JQLite) {
         this.container = element.parent();
         this.containerElement = this.container[0];
+    }
+
+    CreateRevealerElement(): JQLite {
+        return angular.element('<div class="revealer"></div>');
     }
 
     GetElementTopPosition(element: JQLite): number {
@@ -41,11 +50,17 @@ export class DOMManager implements IDOMManager {
     GetRelativePositionOf(elementRatio: number): number {
         return this.containerElement.offsetTop + this.containerElement.offsetHeight * elementRatio;
     }
-    AppendElementToContainer = (element: JQLite) => {
+    AppendElement = (element: JQLite) => {
         this.container.append(element);
     }
-    PrependElementToContainer = (element: JQLite) => {
+    PrependElement = (element: JQLite) => {
         this.container.prepend(element);
+    }
+    AppendElementToContainer = (element: JQLite, containerToAppend: JQLite) => {
+        containerToAppend.append(element);
+    }
+    PrependElementToContainer = (element: JQLite, containerToPrepend: JQLite) => {
+        containerToPrepend.prepend(element);
     }
     FixScroll(relativePosition: number) {
         this.containerElement.scrollTo(0, this.containerElement.offsetHeight / 2);

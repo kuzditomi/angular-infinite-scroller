@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "test": "karma start karma.conf.js",
+    "test-debug": "karma start karma.debug.conf.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
@@ -31,7 +32,6 @@
     "karma-spec-reporter": "0.0.32",
     "karma-travis-fold-reporter": "1.0.1",
     "karma-typescript": "3.0.12",
-    "path": "0.12.7",
     "ts-loader": "3.3.1",
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "1.1.8",

@@ -10,7 +10,7 @@ describe("Elements manager", function () {
 
     beforeEach(function () {
         domManagerMock = jasmine.createSpyObj<IDOMManager>('domManagerMock', [
-            'AppendElementToContainer',
+            'AppendElement',
             'GetScrollBottomPosition',
             'GetElementBottomPosition'
         ]);
@@ -44,7 +44,7 @@ describe("Elements manager", function () {
             elementsManager.UpdateCollection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
             // Assert
-            expect(domManagerMock.AppendElementToContainer).toHaveBeenCalledTimes(7); // 2 elements below the bottom + 5 buffersize
+            expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(7); // 2 elements below the bottom + 5 buffersize
         });
 
         it("populates container element with proper scope values on creation", function () {
