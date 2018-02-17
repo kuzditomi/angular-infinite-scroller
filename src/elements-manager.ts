@@ -33,8 +33,24 @@ export class ElementsManager implements IElementsManager {
 
     public UpdateCollection = (newCollection: any[]) => {
         this.collection = newCollection;
-        this.AddBottom();
+        this.FillBottom();
         this.updateScopes();
+    }
+
+    private FillBottom() {
+        const parentBottom = this.domManager.GetScrollBottomPosition();
+
+        // don't add more if elements are already out of sight
+        if (this.items.length > 0) {
+            const lastItem = this.items[this.items.length - 1];
+            const lastItemBottom = this.domManager.GetElementBottomPosition(lastItem.Element);
+
+            if (lastItemBottom > parentBottom) {
+                return;
+            }
+        }
+
+        this.AddBottom();
     }
 
     public AddTop = () => {
@@ -53,16 +69,6 @@ export class ElementsManager implements IElementsManager {
 
     public AddBottom = () => {
         const parentBottom = this.domManager.GetScrollBottomPosition();
-
-        // don't add more if elements are already out of sight
-        if (this.items.length > 0) {
-            const lastItem = this.items[this.items.length - 1];
-            const lastItemBottom = this.domManager.GetElementBottomPosition(lastItem.Element);
-
-            if (lastItemBottom > parentBottom) {
-                return;
-            }
-        }
 
         // add this many children below visible area
         let overflowCounter = this.descriptor.Settings.BufferSize;
@@ -84,12 +90,12 @@ export class ElementsManager implements IElementsManager {
     };
 
     public RemoveTop = () => {
-        if (this.items.length < this.descriptor.Settings.BufferSize) {
-            return;
-        }
-
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
+            if (this.items.length <= this.descriptor.Settings.BufferSize) {
+                break;
+            }
+
             const el = this.items[this.descriptor.Settings.BufferSize].Element;
             const elementBottom = this.domManager.GetElementBottomPosition(el);
             const scrollTop = this.domManager.GetScrollTopPosition();
