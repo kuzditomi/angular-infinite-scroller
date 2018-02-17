@@ -92,6 +92,7 @@ describe("Elements manager", function () {
 
             // Act
             elementsManager.UpdateCollection([]);
+            elementsManager.UpdateCollection([1, 2]);
             elementsManager.UpdateCollection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
             // Assert
@@ -116,6 +117,7 @@ describe("Elements manager", function () {
             // Act
             elementsManager.UpdateCollection([]);
             elementsManager.UpdateCollection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+            elementsManager.UpdateCollection([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
 
             // Assert
             expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(6);
