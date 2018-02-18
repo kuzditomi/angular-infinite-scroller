@@ -13,8 +13,8 @@ describe("Descriptor", function () {
             const descriptor = Descriptor.createFrom(scope, attr);
 
             // Assert
-            expect(descriptor.IndexString).toEqual('something');
-            expect(descriptor.CollectionString).toEqual('somecollection');
+            expect(descriptor.IndexExpression).toEqual('something');
+            expect(descriptor.CollectionExpression).toEqual('somecollection');
         });
     });
 

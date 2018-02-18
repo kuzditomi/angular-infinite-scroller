@@ -1,53 +1,58 @@
-export class ScrollSettings {
-    BufferSize: number;
+import { ScrollSettings } from "./scroll-settings";
 
-    private constructor() { 
-        this.BufferSize = 10;
-    }
-
-    static createFrom(attr: ng.IAttributes): ScrollSettings {
-        const settingsObject = new ScrollSettings();
-
-        if (attr['scrollBufferSize']) {
-            try {
-                const size = parseInt(attr['scrollBufferSize']);
-                if (isNaN(size))
-                    throw '';
-
-                settingsObject.BufferSize = size;
-            } catch {
-                throw "could not initialize scroll settings, ScrollBufferSize is not a number";
-            }
-        }
-
-        return settingsObject;
-    }
+interface ExpressionDescriptor {
+    index: string,
+    collection: string,
+    trackBy: string
 }
 
 export class Descriptor {
     private constructor() { }
 
     public Settings: ScrollSettings;
-    public CollectionString: string
-    public IndexString: string;
+    public CollectionExpression: string
+    public IndexExpression: string;
+    public TrackByExpression: string;
     public UseRevealer: boolean;
     public Scope: ng.IScope;
 
     static createFrom(scope: ng.IScope, attr: ng.IAttributes): Descriptor {
-        const loop = attr.infiniteScroller,
-            match = loop.match(/^\s*(.+)\s+in\s+(.*?)$/),
-            indexString = match[1],
-            collectionString = match[2];
-
         const settings = ScrollSettings.createFrom(attr);
+        const expressionDesc = Descriptor.parseExpression(attr.infiniteScroller);
 
         const descriptor = new Descriptor();
-        descriptor.CollectionString = collectionString;
-        descriptor.IndexString = indexString;
+        descriptor.CollectionExpression = expressionDesc.collection;
+        descriptor.IndexExpression = expressionDesc.index;
+        descriptor.TrackByExpression = expressionDesc.trackBy;
         descriptor.UseRevealer = attr['useRevealer'] != undefined;
         descriptor.Scope = scope;
         descriptor.Settings = settings;
 
         return descriptor;
+    }
+
+    private static parseExpression(expression: string): ExpressionDescriptor {
+        // parser logic mostly copied from ngRepeater https://github.com/angular/angular.js/blob/master/src/ng/directive/ngRepeat.js
+        let match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+
+        if (!match) {
+            throw Error(`Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '${expression}'.`);
+        }
+
+        const lhs = match[1];
+        const rhs = match[2];
+        const trackByExp = match[3];
+
+        match = lhs.match(/^(?:(\s*[$\w]+))$/);
+
+        if (!match) {
+            throw Error(`'_item_' in '_item_ in _collection_' should be an identifier but got '${lhs}'.`);
+        }
+
+        return {
+            collection: rhs,
+            index: match[1],
+            trackBy: trackByExp
+        }
     }
 }

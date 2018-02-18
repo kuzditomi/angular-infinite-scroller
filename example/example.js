@@ -16,6 +16,9 @@
                 scope.items = numbers;
             };
 
+            // floating list
+            scope.floatingList = numbers.slice();
+
             // table
             let rows = [];
             for (var i = 0; i < 100; i++) {

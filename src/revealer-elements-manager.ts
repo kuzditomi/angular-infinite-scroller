@@ -3,7 +3,7 @@ import { Descriptor } from "./descriptor";
 import { DOMManager } from "./dom-manager";
 
 type Revealer = {
-    Element: JQLite;
+    Element: ng.IAugmentedJQuery;
     Items: Item[];
 }
 
@@ -51,7 +51,7 @@ export class RevealerElementsManager implements IElementsManager {
 
                 if (hasItemToBind && hasElementToBind) {
                     // nothing special, bind scope
-                    revealer.Items[i].Scope[this.descriptor.IndexString] = this.collection[index];
+                    revealer.Items[i].Scope[this.descriptor.IndexExpression] = this.collection[index];
                 } else if (hasItemToBind) {
                     // create element and bind
                     const item = this.transcludeElement(index);
@@ -208,9 +208,9 @@ export class RevealerElementsManager implements IElementsManager {
         const item = {} as Item;
 
         const childScope = this.descriptor.Scope.$new();
-        childScope[this.descriptor.IndexString] = this.collection[index];
+        childScope[this.descriptor.IndexExpression] = this.collection[index];
 
-        this.linker(childScope, (clone: JQLite) => {
+        this.linker(childScope, (clone: ng.IAugmentedJQuery) => {
             item.Element = clone;
             item.Scope = childScope;
         });

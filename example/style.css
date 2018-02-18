@@ -1,6 +1,6 @@
 div.example-container {
     width: 50%;
-    height: 300px;
+    height: 400px;
     margin: 0;
     padding: 0;
     float: left;
@@ -10,6 +10,7 @@ div.scroll-container {
     height: 200px;
     width: 200px;
     overflow-y: scroll;
+    display: inline-block;
 }
 
 div.float-scroll-container {
@@ -18,12 +19,17 @@ div.float-scroll-container {
     overflow-y: scroll;
 }
 
+div.controlls {
+    width: 200px;
+    display: inline-block;
+}
+
 div.float-scroll-container .float-item {
     width: 33%;
     float: left;
 }
 
-div.float-scroll-container .float-item:nth-child(3n+1){
+div.float-scroll-container .float-item:nth-child(3n+1) {
     clear: both;
 }
 

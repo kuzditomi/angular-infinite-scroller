@@ -14,7 +14,7 @@ describe("Scroller factory", function () {
         scopeMock.$watchCollection.and.callFake((_, updatecallback) => watchCallback = updatecallback);
         scopeMock.$new.and.returnValue({});
 
-        const parentElementMock = jasmine.createSpyObj<JQLite>("parentElementMock", ["bind", "append"]);
+        const parentElementMock = jasmine.createSpyObj<ng.IAugmentedJQuery>("parentElementMock", ["bind", "append"]);
         const scrollDetectorMock = jasmine.createSpyObj<ScrollDetector>("scrollDetectorMock", ["SubscribeToElement"]);
         const domManagerMock = jasmine.createSpyObj<DOMManager>("domManagerMock", ["AppendElement", "GetScrollBottomPosition", "GetElementBottomPosition"]);
         domManagerMock.GetScrollBottomPosition.and.returnValue(100);
@@ -44,7 +44,7 @@ describe("Scroller factory", function () {
         scopeMock.$watchCollection.and.callFake((_, updatecallback) => watchCallback = updatecallback);
         scopeMock.$new.and.returnValue({});
 
-        const parentElementMock = jasmine.createSpyObj<JQLite>("parentElementMock", ["bind", "append"]);
+        const parentElementMock = jasmine.createSpyObj<ng.IAugmentedJQuery>("parentElementMock", ["bind", "append"]);
         const scrollDetectorMock = jasmine.createSpyObj<ScrollDetector>("scrollDetectorMock", ["SubscribeToElement"]);
         const domManagerMock = jasmine.createSpyObj<DOMManager>("domManagerMock", [
             "AppendElement",

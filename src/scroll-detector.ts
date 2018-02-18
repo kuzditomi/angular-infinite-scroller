@@ -4,7 +4,7 @@ export class ScrollDetector {
     private lastScrollTop = 0;
     private BUFFER_COUNT = 5;
 
-    constructor(private element: JQLite) { }
+    constructor(private element: ng.IAugmentedJQuery) { }
 
     public SubscribeToElement = () => {
         const parentEl: HTMLElement = this.element.parent()[0];

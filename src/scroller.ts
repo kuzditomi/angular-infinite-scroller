@@ -13,7 +13,7 @@ export class Scroller {
 
         this.scrollDetector.SubscribeToElement();
         
-        this.scope.$watchCollection(descriptor.CollectionString, this.onCollectionUpdated);
+        this.scope.$watchCollection(descriptor.CollectionExpression, this.onCollectionUpdated);
     }
 
     private onCollectionUpdated = (newCollection: any[]): void => {

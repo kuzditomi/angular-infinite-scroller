@@ -15,27 +15,35 @@
     <main ng-controller="ExampleController">
         <div class="example-container">
             <h1>Simple list</h1>
-
+            <p>Press "fill items array" button to populate list!</p>
             <div class="scroll-container">
-                <div infinite-scroller="item in items">
+                <div infinite-scroller="item in items | filter:numberfilter">
                     {{item}}
                 </div>
             </div>
-
-            <button ng-click="fillItems()">fill items array</button>
-            <button ng-click="items[1] = items[1]+1">update second element</button>
-            <button ng-click="items.splice(2,1)">remove third element</button>
-            <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
+            <div class="controlls">
+                <div>
+                    filter: <input type="text" ng-model="numberfilter" />
+                </div>
+                <button ng-click="fillItems()">fill items array</button>
+                <button ng-click="items[1] = items[1]+1">update second element</button>
+                <button ng-click="items.splice(2,1)">remove third element</button>
+                <button ng-click="items.splice(2,0,1000)">insert new to third place</button>
+            </div>
         </div>
 
         <div class="example-container">
             <h1>Floating list</h1>
 
             <div class="float-scroll-container">
-                <div infinite-scroller="item in items" class="float-item" use-revealer>
+                <div infinite-scroller="item in floatingList" class="float-item" use-revealer>
                     {{item}}
                 </div>
             </div>
+
+            <button ng-click="floatingList[1] = floatingList[1]+1">update second element</button>
+            <button ng-click="floatingList.splice(2,1)">remove third element</button>
+            <button ng-click="floatingList.splice(2,0,1000)">insert new to third place</button>
         </div>
 
         <div class="example-container">

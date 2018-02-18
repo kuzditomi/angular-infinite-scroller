@@ -23,8 +23,8 @@ describe("Elements manager", function () {
         linkerMock = (_, linkCallback) => linkCallback();
 
         descriptorMock = {
-            IndexString: 'item',
-            CollectionString: 'items',
+            IndexExpression: 'item',
+            CollectionExpression: 'items',
             Scope: scopeMock as ng.IScope,
             Settings: {
                 BufferSize: 10

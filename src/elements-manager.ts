@@ -2,7 +2,7 @@ import { Descriptor } from "./descriptor";
 import { IDOMManager } from "./dom-manager";
 
 export type Item = {
-    Element: JQLite,
+    Element: ng.IAugmentedJQuery,
     Scope: ng.IScope
 }
 
@@ -132,7 +132,7 @@ export class ElementsManager implements IElementsManager {
     private updateScopes = () => {
         for (var i = 0; i < this.items.length; i++) {
             const item = this.items[i];
-            item.Scope[this.descriptor.IndexString] = this.collection[this.displayFrom + i];
+            item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
         }
 
         // TODO: clean dom if removal took place 
@@ -142,9 +142,9 @@ export class ElementsManager implements IElementsManager {
         const item = {} as Item;
 
         const childScope = this.descriptor.Scope.$new();
-        childScope[this.descriptor.IndexString] = this.collection[index];
+        childScope[this.descriptor.IndexExpression] = this.collection[index];
 
-        this.linker(childScope, (clone: JQLite) => {
+        this.linker(childScope, (clone: ng.IAugmentedJQuery) => {
             item.Element = clone;
             item.Scope = childScope;
         });
