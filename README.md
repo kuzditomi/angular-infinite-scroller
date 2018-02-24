@@ -6,7 +6,7 @@
 AngularJS directive to displays limited number of elements in an ng-repeat like manner.
 
 ## Download
-[Minified version](https://raw.githubusercontent.com/kuzditomi/angular-infinite-scroller/master/dist/angular-infinite-scroll.min.js)
+[Minified version](https://raw.githubusercontent.com/kuzditomi/angular-infinite-scroller/master/dist/angular-infinite-scroller.min.js)
 
 ## Install
 
@@ -37,7 +37,7 @@ div.scroll-container {
 
 ## Demo
 
-...
+See documentation and examples on [github page](https://kuzditomi.github.io/angular-infinite-scroller/).
 
 ## Examples
 

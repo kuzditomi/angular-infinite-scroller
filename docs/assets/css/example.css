@@ -1,3 +1,16 @@
+/*
+ BOOTSTRAP OVERRIDE
+*/
+.nav-pills>li>a,
+.highlight
+{
+    border-radius: 0px;
+}
+
+/*
+ SIMPLE
+*/
+
 div.simple-scroll-container {
     height: 200px;
     width: 200px;
