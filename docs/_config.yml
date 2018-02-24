@@ -1,0 +1,74 @@
+# username/repository
+id: kuzditomi/angular-infinite-scroller
+# name of the software
+name: AngularJS Infinite Scroller
+# current version of the software
+version: 0.1 - under development
+# licence of the software
+license: MIT License
+licenseUrl: http://opensource.org/licenses/MIT
+# extension of the favicon, blank to disable
+favicon: png
+
+# download button
+# if download.popup is true, the download button will open a popup with several download options
+# otherwise it will simply open download.url and other options are ignored
+# if download.popup is true, any option is optional
+# download.cdn.img is optional
+download:
+  popup: false
+  url: https://raw.githubusercontent.com/kuzditomi/angular-infinite-scroller/master/dist/angular-infinite-scroll.min.js
+# npm: jekyll-bootstrap-doc
+# cdn:
+#   url: https://cdnjs.com/libraries/jekyll-bootstrap-doc
+#   img: https://alemangui.github.io/pizzicato/img/cdnjs.svg
+#   name: cdnjs
+
+ # set this to true to replace the generated header navbar by _includes/navbar.html
+customNavBar: false
+
+# list of additional links on the right of the top menu
+headerLinks:
+  - title: GitHub
+    url: https://github.com/kuzditomi/angular-infinite-scroller
+
+# list if additional links on the footer
+footerLinks:
+  - title: GitHub
+    url: https://github.com/kuzditomi/angular-infinite-scroller
+
+# header
+header:
+  color1: "#2962FF"
+  trianglify: false
+
+# google analytics
+analytics:
+  account:
+  domain:
+
+# github buttons
+githubButton:
+  user: kuzditomi
+  repo: angular-infinite-scroller
+
+# # twitter buttons
+# twitter:
+#   enabled: true
+#   via:
+#   hash:
+#   account:
+
+# # facebook buttons
+# facebook:
+#   enabled: true
+#   profileUrl:
+
+
+exclude: ['README.md', 'LICENSE', 'bower.json', 'Gemfile.lock', 'Gemfile']
+
+gems:
+  - jekyll-mentions
+  - jemoji
+  - jekyll-redirect-from
+  - jekyll-sitemap

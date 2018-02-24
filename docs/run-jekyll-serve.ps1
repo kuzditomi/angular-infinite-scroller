@@ -1,0 +1,1 @@
+docker run --rm --volume=.:/srv/jekyll -p 35729:35729 -p 8080:4000 -it jekyll/builder:3.5 jekyll build
