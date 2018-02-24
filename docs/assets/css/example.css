@@ -1,0 +1,37 @@
+div.simple-scroll-container {
+    height: 200px;
+    width: 200px;
+    overflow-y: scroll;
+}
+
+/**
+ TABLE 
+ **/
+
+.table-example-container {
+    width: 300px;
+}
+
+.table-example-container table thead, .table-example-container table tbody {
+    display: block;
+}
+
+.table-example-container tbody.scroll-container {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.table-example-container table tbody tr, .table-example-container table thead tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-example-container table th, .table-example-container table td {
+    text-align: left;
+    width: 100%;
+}
+
+.table-example-container table th:nth-child(1), .table-example-container table td:nth-child(1) {
+    width: 30px;
+}

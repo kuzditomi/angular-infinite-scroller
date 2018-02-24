@@ -18,6 +18,7 @@
   <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
   <link href="{{site.github.url}}/assets/css/docs.min.css" rel="stylesheet">
   <link href="{{site.github.url}}/assets/css/style.css" rel="stylesheet">
+  <link href="{{site.github.url}}/assets/css/example.css" rel="stylesheet">
 
   <style>
     #content {
@@ -28,12 +29,15 @@
 
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.8/angular.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
   <script src="{{site.github.url}}/assets/js/docs.min.js"></script>
   <script src="{{site.github.url}}/assets/js/script.js"></script>
+  <script src="{{site.github.url}}/assets/js/angular-infinite-scroller.min.js"></script>
+  <script src="{{site.github.url}}/assets/js/examples.js"></script>
 </head>
 
-<body>
+<body ng-app="example">
   <!-- Main navigation
   =========================================== -->
   <header class="navbar navbar-static-top bs-docs-nav" id="top">
@@ -182,6 +186,8 @@
       {% for l in site.footerLinks %}
         <li>&middot;</li>
         <li><a href="{{l.url}}">{{l.title}}</a></li>
+        <li>&middot;</li>
+        <li>by <a href="mailto:kuzditomi@gmail.com">kuzditomi</a></li>
       {% endfor %}
       </ul>
     </div>

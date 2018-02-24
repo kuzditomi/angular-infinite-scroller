@@ -1,4 +1,5 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
@@ -7,7 +8,7 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist',
-        filename: 'angular-infinite-scroll.min.js'
+        filename: 'angular-infinite-scroller.min.js'
     },
     resolve: {
         extensions: ['.ts']
@@ -18,6 +19,13 @@ module.exports = {
         ]
     },
     plugins: [
-        new UglifyJsPlugin({ sourceMap: true })
+        new UglifyJsPlugin({ sourceMap: true }),
+        new FileManagerPlugin({
+            onEnd: {
+              copy: [
+                { source: 'dist/angular-infinite-scroller.min.js', destination: 'docs/assets/js' },
+              ]
+            }
+        })      
     ]
 }
