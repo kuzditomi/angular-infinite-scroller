@@ -7,7 +7,9 @@
     "build": "webpack",
     "test": "karma start karma.conf.js",
     "test-debug": "karma start karma.debug.conf.js",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts tests/**/*.ts",
+    "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -21,14 +23,20 @@
   "homepage": "https://github.com/kuzditomi/angular-infinite-scroller#readme",
   "dependencies": {},
   "devDependencies": {
+    "@angular/common": "2.3.1",
+    "@angular/compiler": "2.3.1",
+    "@angular/core": "2.3.1",
+    "@angular/platform-browser": "2.3.1",
+    "@angular/platform-browser-dynamic": "2.3.1",
     "@types/angular": "1.6.41",
     "@types/angular-mocks": "1.5.11",
     "@types/jasmine": "2.8.6",
     "angular": "1.6.8",
     "angular-mocks": "1.6.8",
+    "codelyzer": "4.2.1",
     "copy-webpack-plugin": "4.4.2",
     "coveralls": "3.0.0",
-    "filemanager-webpack-plugin": "^1.0.24",
+    "filemanager-webpack-plugin": "1.0.24",
     "jasmine": "3.0.0",
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
@@ -36,10 +44,15 @@
     "karma-spec-reporter": "0.0.32",
     "karma-travis-fold-reporter": "1.0.1",
     "karma-typescript": "3.0.12",
-    "path": "^0.12.7",
+    "path": "0.12.7",
+    "rxjs": "5.0.0-rc.4",
     "ts-loader": "3.3.1",
+    "tslint": "5.6.0",
+    "tslint-eslint-rules": "3.2.0",
+    "tslint-webpack-plugin": "^1.2.2",
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "1.1.8",
-    "webpack": "3.10.0"
+    "webpack": "3.10.0",
+    "zone.js": "0.7.2"
   }
 }

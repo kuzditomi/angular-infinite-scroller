@@ -1,0 +1,134 @@
+{
+    "linterOptions": {
+      "exclude": [
+        "public/generated/*.ts"
+      ]
+    },
+    "rulesDirectory": [
+      "node_modules/codelyzer",
+      "node_modules/tslint-eslint-rules/dist/rules"
+    ],
+    "rules": {
+      "use-input-property-decorator": true,
+      "use-output-property-decorator": true,
+      "use-host-property-decorator": true,
+      "no-attribute-parameter-decorator": true,
+      "no-output-rename": true,
+      "use-life-cycle-interface": true,
+      "use-pipe-transform-interface": true,
+      "component-class-suffix": true,
+      "directive-class-suffix": true,
+      "class-name": true,
+      "radix": false,
+      "eofline": true,
+      "comment-format": [
+        true,
+        "check-space"
+      ],
+      "no-arg": true,
+      "no-bitwise": true,
+      "no-construct": true,
+      "no-console": [
+        true,
+        "log",
+        "error"
+      ],
+      "no-use-before-declare": true,
+      "no-unused-expression": true,
+      "no-debugger": true,
+      "no-conditional-assignment": true,
+      "no-duplicate-case": true,
+      "no-duplicate-variable": true,
+      "no-empty": true,
+      "no-eval": true,
+      "no-internal-module": true,
+      "no-trailing-whitespace": true,
+      "no-unexpected-multiline": true,
+      "no-var-keyword": true,
+      "no-consecutive-blank-lines": [ true, 1 ],
+      "one-line": [
+        true,
+        "check-catch",
+        "check-else",
+        "check-open-brace",
+        "check-whitespace"
+      ],
+      "trailing-comma": [
+        true,
+        { "multiline": "always" }
+      ],
+      "triple-equals": [
+        true,
+        "allow-null-check"
+      ],
+      "typedef-whitespace": [
+        true,
+        {
+          "call-signature": "nospace",
+          "index-signature": "nospace",
+          "parameter": "nospace",
+          "property-declaration": "nospace",
+          "variable-declaration": "nospace"
+        },
+        {
+          "call-signature": "onespace",
+          "index-signature": "onespace",
+          "parameter": "onespace",
+          "property-declaration": "onespace",
+          "variable-declaration": "onespace"
+        }
+      ],
+      "variable-name": [
+        true,
+        "ban-keywords",
+        "allow-leading-underscore"
+      ],
+      "whitespace": [
+        true,
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-module",
+        "check-separator",
+        "check-type",
+        "check-typecast"
+      ],
+      "no-default-export": true,
+      "member-ordering": [
+        true,
+        {
+          "order": [
+            "static-field",
+            "instance-field",
+            "constructor",
+            "public-instance-method",
+            "protected-instance-method",
+            "private-instance-method"
+          ]
+        }
+      ],
+      "one-variable-per-declaration": [
+        true
+      ],
+      "no-namespace": false,
+      "no-invalid-this": [
+        true,
+        "check-function-in-method"
+      ],
+      "ter-indent": [
+        true,
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ],
+      "semicolon": [ true, "always" ],
+      "quotemark": [ true, "single" ],
+      "ter-max-len": false,
+      "max-line-length": [ false ]
+    }
+  }

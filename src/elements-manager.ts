@@ -1,10 +1,10 @@
-import { Descriptor } from "./descriptor";
-import { IDOMManager } from "./dom-manager";
+import { Descriptor } from './descriptor';
+import { IDOMManager } from './dom-manager';
 
 export type Item = {
-    Element: ng.IAugmentedJQuery,
-    Scope: ng.IScope
-}
+    Element: ng.IAugmentedJQuery;
+    Scope: ng.IScope;
+};
 
 export interface IElementsManager {
     UpdateCollection(newCollection: any[]): void;
@@ -37,26 +37,11 @@ export class ElementsManager implements IElementsManager {
         this.updateScopes();
     }
 
-    private FillBottom() {
-        const parentBottom = this.domManager.GetScrollBottomPosition();
-
-        // don't add more if elements are already out of sight
-        if (this.items.length > 0) {
-            const lastItem = this.items[this.items.length - 1];
-            const lastItemBottom = this.domManager.GetElementBottomPosition(lastItem.Element);
-
-            if (lastItemBottom > parentBottom) {
-                return;
-            }
-        }
-
-        this.AddBottom();
-    }
-
     public AddTop = () => {
         let countTillStop = this.descriptor.Settings.BufferSize;
 
-        for (var i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
+        let i = 0;
+        for (i = this.displayFrom - 1; i >= 0 && countTillStop > 0; i--) {
             const newElement = this.transcludeElement(i);
             this.domManager.PrependElement(newElement.Element);
             this.items.unshift(newElement);
@@ -65,7 +50,7 @@ export class ElementsManager implements IElementsManager {
         }
 
         this.displayFrom = i + 1;
-    };
+    }
 
     public AddBottom = () => {
         const parentBottom = this.domManager.GetScrollBottomPosition();
@@ -73,7 +58,8 @@ export class ElementsManager implements IElementsManager {
         // add this many children below visible area
         let overflowCounter = this.descriptor.Settings.BufferSize;
 
-        for (var i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
+        let i = 0;
+        for (i = this.displayTo; i < this.collection.length && overflowCounter > 0; i++) {
             const item = this.transcludeElement(i);
             this.domManager.AppendElement(item.Element);
             this.items.push(item);
@@ -87,7 +73,7 @@ export class ElementsManager implements IElementsManager {
         }
 
         this.displayTo = i;
-    };
+    }
 
     public RemoveTop = () => {
         let hasInvisibleChildren = true;
@@ -107,7 +93,7 @@ export class ElementsManager implements IElementsManager {
                 hasInvisibleChildren = false;
             }
         }
-    };
+    }
 
     public RemoveBottom = () => {
         if (this.items.length < this.descriptor.Settings.BufferSize) {
@@ -127,16 +113,32 @@ export class ElementsManager implements IElementsManager {
                 hasInvisibleChildren = false;
             }
         }
-    };
+    }
+
+    private FillBottom() {
+        const parentBottom = this.domManager.GetScrollBottomPosition();
+
+        // don't add more if elements are already out of sight
+        if (this.items.length > 0) {
+            const lastItem = this.items[this.items.length - 1];
+            const lastItemBottom = this.domManager.GetElementBottomPosition(lastItem.Element);
+
+            if (lastItemBottom > parentBottom) {
+                return;
+            }
+        }
+
+        this.AddBottom();
+    }
 
     private updateScopes = () => {
-        for (var i = 0; i < this.items.length; i++) {
+        for (let i = 0; i < this.items.length; i++) {
             const item = this.items[i];
             item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
         }
 
-        // TODO: clean dom if removal took place 
-    };
+        // TODO: clean dom if removal took place
+    }
 
     private transcludeElement = (index: number): Item => {
         const item = {} as Item;

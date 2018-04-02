@@ -1,18 +1,15 @@
-import { scrollerModule } from "../src/module";
-
 declare var angular;
 
 // this is purely here for the test coverage
-describe("angular module", function () {
-    it("correctly registers directive", function () {
+describe('angular module', function () {
+    it('correctly registers directive', function () {
         // Arrange
         angular.mock.module('angular-infinite-scroller');
 
         let rs: ng.IRootScopeService;
         let compileService: ng.ICompileService;
-        let timeoutService: ng.ITimeoutService;
 
-        inject(['$rootScope', '$compile', function (rootScope, compile,timeout) {
+        inject(['$rootScope', '$compile', function (rootScope, compile) {
             rs = rootScope;
             compileService = compile;
         }]);
@@ -20,7 +17,7 @@ describe("angular module", function () {
         const elm = angular.element(
             '<div class="container">' +
             '<div infinite-scroller="item in items"></div>' +
-            '</div>'
+            '</div>',
         );
         const scope = rs.$new() as any;
         const newScopes = [];

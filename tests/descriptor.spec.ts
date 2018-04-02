@@ -1,12 +1,12 @@
-import { Descriptor } from "../src/descriptor";
+import { Descriptor } from '../src/descriptor';
 
-describe("Descriptor", function () {
+describe('Descriptor', function () {
     describe('regex', function () {
-        it("parses collection and index strings properly", function () {
+        it('parses collection and index strings properly', function () {
             // Arrange
             const scope = {} as ng.IScope;
             const attr = {
-                infiniteScroller: 'something in somecollection'
+                infiniteScroller: 'something in somecollection',
             } as any as ng.IAttributes;
 
             // Act
@@ -33,12 +33,12 @@ describe("Descriptor", function () {
             expect(descriptor.Settings.BufferSize).toEqual(10);
         });
 
-        it("is parsed if given correctly", function () {
+        it('is parsed if given correctly', function () {
             // Arrange
             const scope = {} as ng.IScope;
             const attr = {
                 infiniteScroller: 'something in somecollection',
-                scrollBufferSize: '198'
+                scrollBufferSize: '198',
             } as any as ng.IAttributes;
 
             // Act
@@ -48,19 +48,19 @@ describe("Descriptor", function () {
             expect(descriptor.Settings.BufferSize).toEqual(198);
         });
 
-        it("throws if incorrect value is given", function () {
+        it('throws if incorrect value is given', function () {
             // Arrange
             const scope = {} as ng.IScope;
             const attr = {
                 infiniteScroller: 'something in somecollection',
-                scrollBufferSize: 'this is not a number'
+                scrollBufferSize: 'this is not a number',
             } as any as ng.IAttributes;
 
             // Act
             const creation = () => Descriptor.createFrom(scope, attr);
 
             // Assert
-            expect(creation).toThrow("could not initialize scroll settings, ScrollBufferSize is not a number");
+            expect(creation).toThrow('could not initialize scroll settings, ScrollBufferSize is not a number');
         });
     });
 });

@@ -1,5 +1,6 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const TSLintPlugin = require('tslint-webpack-plugin');
 
 module.exports = {
     devtool: 'source-map',
@@ -22,10 +23,16 @@ module.exports = {
         new UglifyJsPlugin({ sourceMap: true }),
         new FileManagerPlugin({
             onEnd: {
-              copy: [
-                { source: 'dist/angular-infinite-scroller.min.js', destination: 'docs/assets/js' },
-              ]
+                copy: [
+                    { source: 'dist/angular-infinite-scroller.min.js', destination: 'docs/assets/js' },
+                ]
             }
-        })      
+        }),
+        new TSLintPlugin({
+            files: [
+                './src/**/*.ts',
+                './tests/**/*.ts',
+            ]
+        })
     ]
 }

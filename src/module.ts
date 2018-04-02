@@ -1,5 +1,5 @@
 import { Descriptor } from './descriptor';
-import { ScrollerFactory } from "./scroller-factory";
+import { ScrollerFactory } from './scroller-factory';
 import { DOMManager } from './dom-manager';
 import { ScrollDetector } from './scroll-detector';
 
@@ -12,11 +12,12 @@ scrollerModule.directive('infiniteScroller', () => {
         priority: 1000,
         restrict: 'A',
         transclude: 'element',
-        link: (scope: ng.IScope, element: ng.IAugmentedJQuery, attr: ng.IAttributes, ctrl, linker: ng.ITranscludeFunction) => {
+        link: (scope: ng.IScope, element: ng.IAugmentedJQuery, attr: ng.IAttributes, _ctrl, linker: ng.ITranscludeFunction) => {
             const descriptor = Descriptor.createFrom(scope, attr);
             const domManager = new DOMManager(element);
             const scrollDetector = new ScrollDetector(element);
-            const scroller = ScrollerFactory.createFrom(descriptor, domManager, linker, scrollDetector);
-        }
-    }
+
+            ScrollerFactory.createFrom(descriptor, domManager, linker, scrollDetector);
+        },
+    };
 });

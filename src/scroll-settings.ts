@@ -16,7 +16,7 @@ export class ScrollSettings {
 
                 settingsObject.BufferSize = size;
             } catch {
-                throw "could not initialize scroll settings, ScrollBufferSize is not a number";
+                throw 'could not initialize scroll settings, ScrollBufferSize is not a number';
             }
         }
 

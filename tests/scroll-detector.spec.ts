@@ -1,6 +1,6 @@
-import { ScrollDetector } from "../src/scroll-detector";
+import { ScrollDetector } from '../src/scroll-detector';
 
-describe("Scroll detector", function () {
+describe('Scroll detector', function () {
     let elementMock;
     let parentMock;
     let scrollDetector: ScrollDetector;
@@ -9,21 +9,21 @@ describe("Scroll detector", function () {
         parentMock = {
             0: {
                 children: [
-                    {}
-                ]
-            } as any as HTMLElement
+                    {},
+                ],
+            } as any as HTMLElement,
         };
 
         elementMock = {
             0: {},
-            parent: () => parentMock
+            parent: () => parentMock,
         };
 
         scrollDetector = new ScrollDetector(elementMock);
     });
 
-    describe("gives no sign", function () {
-        it("when bottom is too far", function () {
+    describe('gives no sign', function () {
+        it('when bottom is too far', function () {
             // Arrange
             parentMock[0].scrollHeight = 1000;
             parentMock[0].scrollTop = 90;
@@ -41,7 +41,7 @@ describe("Scroll detector", function () {
             expect(isScrollCalled).toBeFalsy();
         });
 
-        it("when scroll is the same", function () {
+        it('when scroll is the same', function () {
             // Arrange
             parentMock[0].scrollTop = 100;
 
@@ -61,7 +61,7 @@ describe("Scroll detector", function () {
             expect(isScrollCalled).toBeFalsy();
         });
 
-        it("when top is too far", function () {
+        it('when top is too far', function () {
             // Arrange
             parentMock[0].scrollHeight = 1000;
             parentMock[0].scrollTop = 100;
@@ -85,10 +85,10 @@ describe("Scroll detector", function () {
             // Assert
             expect(isScrollCalled).toBeFalsy();
         });
-    })
+    });
 
-    describe("signs to load", function () {
-        it("if bottom is reached", function () {
+    describe('signs to load', function () {
+        it('if bottom is reached', function () {
             // Arrange
             parentMock[0].scrollHeight = 100;
             parentMock[0].scrollTop = 90;
@@ -105,7 +105,7 @@ describe("Scroll detector", function () {
             expect(isScrollDownCalled).toBeTruthy();
         });
 
-        it("if top is reached", function () {
+        it('if top is reached', function () {
             // Arrange
             parentMock[0].scrollHeight = 1000;
             parentMock[0].scrollTop = 100;

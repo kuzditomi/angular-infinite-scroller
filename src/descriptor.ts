@@ -1,20 +1,20 @@
-import { ScrollSettings } from "./scroll-settings";
+import { ScrollSettings } from './scroll-settings';
 
 interface ExpressionDescriptor {
-    index: string,
-    collection: string,
-    trackBy: string
+    index: string;
+    collection: string;
+    trackBy: string;
 }
 
 export class Descriptor {
-    private constructor() { }
-
     public Settings: ScrollSettings;
-    public CollectionExpression: string
+    public CollectionExpression: string;
     public IndexExpression: string;
     public TrackByExpression: string;
     public UseRevealer: boolean;
     public Scope: ng.IScope;
+
+    private constructor() { }
 
     static createFrom(scope: ng.IScope, attr: ng.IAttributes): Descriptor {
         const settings = ScrollSettings.createFrom(attr);
@@ -24,7 +24,7 @@ export class Descriptor {
         descriptor.CollectionExpression = expressionDesc.collection;
         descriptor.IndexExpression = expressionDesc.index;
         descriptor.TrackByExpression = expressionDesc.trackBy;
-        descriptor.UseRevealer = attr['useRevealer'] != undefined;
+        descriptor.UseRevealer = attr['useRevealer'] !== undefined;
         descriptor.Scope = scope;
         descriptor.Settings = settings;
 
@@ -52,7 +52,7 @@ export class Descriptor {
         return {
             collection: rhs,
             index: match[1],
-            trackBy: trackByExp
-        }
+            trackBy: trackByExp,
+        };
     }
 }

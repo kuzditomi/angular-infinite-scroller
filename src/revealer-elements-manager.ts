@@ -1,11 +1,11 @@
-import { Item, IElementsManager } from "./elements-manager";
-import { Descriptor } from "./descriptor";
-import { DOMManager } from "./dom-manager";
+import { Item, IElementsManager } from './elements-manager';
+import { Descriptor } from './descriptor';
+import { DOMManager } from './dom-manager';
 
 type Revealer = {
     Element: ng.IAugmentedJQuery;
     Items: Item[];
-}
+};
 
 export class RevealerElementsManager implements IElementsManager {
     private collection: any[];
@@ -15,9 +15,7 @@ export class RevealerElementsManager implements IElementsManager {
     private revealers: Revealer[];
     private revealerSize: number;
 
-    private BUFFER_COUNT = 5;
-    private LOAD_COUNT = 10;
-    private REVEALER_SIZE_TO_CONTAINER = 0.75
+    private REVEALER_SIZE_TO_CONTAINER = 0.75;
 
     constructor(private descriptor: Descriptor, private domManager: DOMManager, private linker: ng.ITranscludeFunction) {
         this.revealers = [];
@@ -31,7 +29,7 @@ export class RevealerElementsManager implements IElementsManager {
     }
 
     public UpdateCollection = (newCollection: any[]) => {
-        if (this.collection == undefined) {
+        if (this.collection === undefined) {
             this.collection = newCollection;
             this.InitializeRevealer();
             this.AddBottom();
@@ -39,6 +37,123 @@ export class RevealerElementsManager implements IElementsManager {
             this.collection = newCollection;
             this.updateScopes();
         }
+    }
+
+    public InitializeRevealer = () => {
+        const newRevealer = this.createRevealer();
+        this.revealers.push(newRevealer);
+        this.domManager.AppendElement(newRevealer.Element);
+
+        let i = 0;
+        let isRevealerFilled = false;
+
+        while (!isRevealerFilled) {
+            if (i >= this.collection.length)
+                break;
+
+            const item = this.transcludeElement(i);
+            this.domManager.AppendElementToContainer(item.Element, newRevealer.Element);
+            newRevealer.Items.push(item);
+
+            const fillUntil = this.domManager.GetRelativePositionOf(this.REVEALER_SIZE_TO_CONTAINER);
+            const blockBottom = this.domManager.GetElementBottomPosition(item.Element);
+
+            if (blockBottom > fillUntil) {
+                /*
+                    i had no better idea how to detect bottom line for the case of using floats,
+                    so when the first element passes the line, let's just correct it by removing that one
+                 */
+                const item = newRevealer.Items.pop();
+                item.Scope.$destroy();
+                item.Element.remove();
+
+                isRevealerFilled = true;
+                break;
+            }
+
+            i++;
+        }
+
+        this.revealerSize = i;
+        this.displayTo = i;
+    }
+
+    public AddTop = () => {
+        if (this.displayFrom === 0) {
+            return;
+        }
+
+        const newRevealer = this.createRevealer();
+        this.revealers.unshift(newRevealer);
+        this.domManager.PrependElement(newRevealer.Element);
+
+        let i = 0;
+        for (i = 0; i < this.revealerSize; i++) {
+            const index = this.displayFrom + 1 - i;
+            if (index < 0) {
+                break;
+            }
+
+            const newElement = this.transcludeElement(this.displayFrom - 1 - i);
+            this.domManager.PrependElementToContainer(newElement.Element, newRevealer.Element);
+            newRevealer.Items.unshift(newElement);
+        }
+
+        this.displayFrom -= i;
+    }
+
+    public AddBottom = () => {
+        if (this.displayTo >= this.collection.length) {
+            return;
+        }
+
+        const newRevealer = this.createRevealer();
+        this.revealers.push(newRevealer);
+        this.domManager.AppendElement(newRevealer.Element);
+
+        let i = 0;
+        for (i = 0; i < this.revealerSize && this.displayTo + i < this.collection.length; i++) {
+            const item = this.transcludeElement(this.displayTo + i);
+            newRevealer.Element.append(item.Element);
+            newRevealer.Items.push(item);
+        }
+
+        this.displayTo += i;
+    }
+
+    public RemoveTop = () => {
+        if (this.revealers.length <= 3) {
+            return;
+        }
+
+        const revealer = this.revealers.shift();
+        this.displayFrom += revealer.Items.length;
+
+        while (revealer.Items.length > 0) {
+            const item = revealer.Items.pop();
+            item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
+            item.Scope.$destroy();
+        }
+
+        revealer.Element.remove();
+    }
+
+    public RemoveBottom = () => {
+        if (this.revealers.length <= 3) {
+            return;
+        }
+
+        const revealer = this.revealers.pop();
+        this.displayTo -= revealer.Items.length;
+
+        while (revealer.Items.length > 0) {
+            const item = revealer.Items.pop();
+            this.domManager.Remove(item.Element);
+            item.Scope.$destroy();
+        }
+
+        this.domManager.Remove(revealer.Element);
+        this.domManager.FixScroll(0.5);
     }
 
     private updateScopes = () => {
@@ -69,7 +184,7 @@ export class RevealerElementsManager implements IElementsManager {
                 index++;
             }
 
-            if (revealer.Items.length == 0) {
+            if (revealer.Items.length === 0) {
                 // remove revealer if it's not necessary anymore
                 this.domManager.Remove(revealer.Element);
             }
@@ -86,123 +201,6 @@ export class RevealerElementsManager implements IElementsManager {
             this.revealers = this.revealers.filter(r => r.Items.length > 0);
         }
     }
-
-    public InitializeRevealer = () => {
-        const newRevealer = this.createRevealer();
-        this.revealers.push(newRevealer);
-        this.domManager.AppendElement(newRevealer.Element);
-
-        let i = 0;
-        let isRevealerFilled = false;
-
-        while (!isRevealerFilled) {
-            if (i >= this.collection.length)
-                break;
-
-            const item = this.transcludeElement(i);
-            this.domManager.AppendElementToContainer(item.Element, newRevealer.Element);
-            newRevealer.Items.push(item);
-
-            const fillUntil = this.domManager.GetRelativePositionOf(this.REVEALER_SIZE_TO_CONTAINER);
-            const blockBottom = this.domManager.GetElementBottomPosition(item.Element);
-
-            if (blockBottom > fillUntil) {
-                /* 
-                    i had no better idea how to detect bottom line for the case of using floats,
-                    so when the first element passes the line, let's just correct it by removing that one
-                 */
-                const item = newRevealer.Items.pop();
-                item.Scope.$destroy();
-                item.Element.remove();
-
-                isRevealerFilled = true;
-                break;
-            }
-
-            i++;
-        }
-
-        this.revealerSize = i;
-        this.displayTo = i;
-    };
-
-    public AddTop = () => {
-        if (this.displayFrom == 0) {
-            return;
-        }
-
-        const newRevealer = this.createRevealer();
-        this.revealers.unshift(newRevealer);
-        this.domManager.PrependElement(newRevealer.Element);
-
-        let countTillStop = this.LOAD_COUNT;
-
-        for (var i = 0; i < this.revealerSize; i++) {
-            const index = this.displayFrom + 1 - i;
-            if (index < 0) {
-                break;
-            }
-
-            const newElement = this.transcludeElement(this.displayFrom - 1 - i);
-            this.domManager.PrependElementToContainer(newElement.Element, newRevealer.Element);
-            newRevealer.Items.unshift(newElement);
-        }
-
-        this.displayFrom -= i;
-    };
-
-    public AddBottom = () => {
-        if (this.displayTo >= this.collection.length) {
-            return;
-        }
-
-        const newRevealer = this.createRevealer();
-        this.revealers.push(newRevealer);
-        this.domManager.AppendElement(newRevealer.Element);
-
-        for (var i = 0; i < this.revealerSize && this.displayTo + i < this.collection.length; i++) {
-            const item = this.transcludeElement(this.displayTo + i);
-            newRevealer.Element.append(item.Element);
-            newRevealer.Items.push(item);
-        }
-
-        this.displayTo += i;
-    };
-
-    public RemoveTop = () => {
-        if (this.revealers.length <= 3) {
-            return;
-        }
-
-        const revealer = this.revealers.shift();
-        this.displayFrom += revealer.Items.length;
-
-        while (revealer.Items.length > 0) {
-            const item = revealer.Items.pop();
-            item.Element.remove(); // TODO: might be unnecessary, since we remove the revealer too
-            item.Scope.$destroy();
-        }
-
-        revealer.Element.remove();
-    };
-
-    public RemoveBottom = () => {
-        if (this.revealers.length <= 3) {
-            return;
-        }
-
-        const revealer = this.revealers.pop();
-        this.displayTo -= revealer.Items.length;
-
-        while (revealer.Items.length > 0) {
-            const item = revealer.Items.pop();
-            this.domManager.Remove(item.Element);
-            item.Scope.$destroy();
-        }
-
-        this.domManager.Remove(revealer.Element);
-        this.domManager.FixScroll(0.5);
-    };
 
     private transcludeElement = (index: number): Item => {
         const item = {} as Item;
@@ -223,9 +221,9 @@ export class RevealerElementsManager implements IElementsManager {
 
         const revealer: Revealer = {
             Element: revealerElement,
-            Items: []
+            Items: [],
         };
 
         return revealer;
-    };
+    }
 }

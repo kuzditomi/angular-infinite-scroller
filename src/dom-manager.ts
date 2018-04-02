@@ -5,7 +5,7 @@ export interface IDOMManager {
 
     AppendElement(element: ng.IAugmentedJQuery): void;
     PrependElement(element: ng.IAugmentedJQuery): void;
-    AppendElementToContainer(element: ng.IAugmentedJQuery,containerToAppend: ng.IAugmentedJQuery): void;
+    AppendElementToContainer(element: ng.IAugmentedJQuery, containerToAppend: ng.IAugmentedJQuery): void;
     PrependElementToContainer(element: ng.IAugmentedJQuery, containerToPrepend: ng.IAugmentedJQuery): void;
 
     GetScrollBottomPosition(): number;
@@ -23,7 +23,7 @@ export class DOMManager implements IDOMManager {
     private container: ng.IAugmentedJQuery;
     private containerElement: HTMLElement;
 
-    constructor(private element: ng.IAugmentedJQuery) {
+    constructor(element: ng.IAugmentedJQuery) {
         this.container = element.parent();
         this.containerElement = this.container[0];
     }
@@ -63,6 +63,6 @@ export class DOMManager implements IDOMManager {
         containerToPrepend.prepend(element);
     }
     FixScroll(relativePosition: number) {
-        this.containerElement.scrollTo(0, this.containerElement.offsetHeight / 2);
+        this.containerElement.scrollTo(0, this.containerElement.offsetHeight * relativePosition);
     }
 }

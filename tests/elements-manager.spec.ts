@@ -1,8 +1,8 @@
-import { ElementsManager, IElementsManager } from "../src/elements-manager";
-import { Descriptor } from "../src/descriptor";
-import { IDOMManager } from "../src/dom-manager";
+import { ElementsManager } from '../src/elements-manager';
+import { Descriptor } from '../src/descriptor';
+import { IDOMManager } from '../src/dom-manager';
 
-describe("Elements manager", function () {
+describe('Elements manager', function () {
     let domManagerMock;
     let scopeMock;
     let linkerMock;
@@ -15,7 +15,7 @@ describe("Elements manager", function () {
             'GetScrollBottomPosition',
             'GetElementBottomPosition',
             'GetScrollTopPosition',
-            'Remove'
+            'Remove',
         ]);
 
         scopeMock = jasmine.createSpyObj<ng.IScope>('scopeMock', ['$on', '$new']);
@@ -27,13 +27,13 @@ describe("Elements manager", function () {
             CollectionExpression: 'items',
             Scope: scopeMock as ng.IScope,
             Settings: {
-                BufferSize: 10
-            }
+                BufferSize: 10,
+            },
         } as Descriptor;
     });
 
-    describe("initialization", function () {
-        it("populates container element with proper maximum amount on creation", function () {
+    describe('initialization', function () {
+        it('populates container element with proper maximum amount on creation', function () {
             // Arrange
             scopeMock.$new.and.returnValue({});
             descriptorMock.Settings.BufferSize = 5;
@@ -50,7 +50,7 @@ describe("Elements manager", function () {
             expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(7); // 2 elements below the bottom + 5 buffersize
         });
 
-        it("populates container element with proper scope values on creation", function () {
+        it('populates container element with proper scope values on creation', function () {
             // Arrange
             const bufferSize = 3;
             const scopeValues = ['a', 2, false, 4.0, { property: 'yes' }, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -80,7 +80,7 @@ describe("Elements manager", function () {
             expect(createdChildScopes).toEqual(expectedChildScopes);
         });
 
-        it("populates container element with 'late' initialization too", function () {
+        it('populates container element with \'late\' initialization too', function () {
             // Arrange
             scopeMock.$new.and.returnValue({});
             descriptorMock.Settings.BufferSize = 5;
@@ -99,7 +99,7 @@ describe("Elements manager", function () {
             expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(10);
         });
 
-        it("doesnt overpopulate container element with 'late' initialization", function () {
+        it('doesnt overpopulate container element with \'late\' initialization', function () {
             // Arrange
             scopeMock.$new.and.returnValue({});
             descriptorMock.Settings.BufferSize = 2;
@@ -109,7 +109,7 @@ describe("Elements manager", function () {
                 80, 100, 101, 120, // first visible set
                 121, 122, // buffer
                 130, // below visible
-                106, 107, 108, 109, 110, 111, 112 // random values
+                106, 107, 108, 109, 110, 111, 112, // random values
             );
 
             const elementsManager = new ElementsManager(descriptorMock, domManagerMock, linkerMock);
@@ -124,7 +124,7 @@ describe("Elements manager", function () {
         });
     });
 
-    describe("adds elements", function () {
+    describe('adds elements', function () {
         let elementsManager: ElementsManager;
 
         beforeEach(function () {
@@ -138,7 +138,7 @@ describe("Elements manager", function () {
             domManagerMock.AppendElement.calls.reset();
         });
 
-        it("adds new elements to bottom if necessary", function () {
+        it('adds new elements to bottom if necessary', function () {
             // Arrange new addition
             domManagerMock.AppendElement.calls.reset();
             domManagerMock.GetScrollBottomPosition.and.returnValue(120);
@@ -151,9 +151,9 @@ describe("Elements manager", function () {
             expect(domManagerMock.AppendElement).toHaveBeenCalledTimes(5); // 3 new visible + 2 buffer
         });
 
-        it("adds new elements to top if necessary", function () {
+        it('adds new elements to top if necessary', function () {
             // Arrange initialization
-            scopeMock.$new.and.returnValue({ $destroy: () => { } });
+            scopeMock.$new.and.returnValue({ $destroy: () => undefined });
             descriptorMock.Settings.BufferSize = 2;
             domManagerMock.GetScrollBottomPosition.and.returnValue(100);
             domManagerMock.GetElementBottomPosition.and.returnValues(80, 100, 101, 102);
@@ -174,12 +174,12 @@ describe("Elements manager", function () {
         });
     });
 
-    describe("removes element", function () {
+    describe('removes element', function () {
         let elementsManager: ElementsManager;
 
-        it("removes top", function () {
+        it('removes top', function () {
             // Arrange initialization
-            scopeMock.$new.and.returnValue({ $destroy: () => { } });
+            scopeMock.$new.and.returnValue({ $destroy: () => undefined });
             descriptorMock.Settings.BufferSize = 2;
             domManagerMock.GetScrollBottomPosition.and.returnValue(100);
             domManagerMock.GetElementBottomPosition.and.returnValues(80, 81, 82, 83, 84, 84, 100, 101, 102, 103);
@@ -198,9 +198,9 @@ describe("Elements manager", function () {
             expect(domManagerMock.Remove).toHaveBeenCalledTimes(2);
         });
 
-        it("removes top until at least buffersize", function () {
+        it('removes top until at least buffersize', function () {
             // Arrange initialization
-            scopeMock.$new.and.returnValue({ $destroy: () => { } });
+            scopeMock.$new.and.returnValue({ $destroy: () => undefined });
             descriptorMock.Settings.BufferSize = 2;
             domManagerMock.GetScrollBottomPosition.and.returnValue(100);
             domManagerMock.GetElementBottomPosition.and.returnValues(80, 100, 101, 102);

@@ -1,8 +1,9 @@
-import { DOMManager } from "./dom-manager";
-
 export class ScrollDetector {
     private lastScrollTop = 0;
     private BUFFER_COUNT = 5;
+
+    public OnScrollDown?: () => void;
+    public OnScrollUp?: () => void;
 
     constructor(private element: ng.IAugmentedJQuery) { }
 
@@ -14,19 +15,16 @@ export class ScrollDetector {
                 const current = parentEl.scrollTop + parentEl.offsetHeight;
                 const bottom = parentEl.scrollHeight;
 
-                if (current == bottom) {
-                    this.OnScrollDown && this.OnScrollDown();
+                if (this.OnScrollDown && current === bottom) {
+                    this.OnScrollDown();
                 }
             } else if (this.lastScrollTop > parentEl.scrollTop) {
                 const topElement = parentEl.children[0];
-                if (parentEl.scrollTop <= (topElement.clientHeight * this.BUFFER_COUNT)) {
-                    this.OnScrollUp && this.OnScrollUp();
+                if (this.OnScrollUp && parentEl.scrollTop <= (topElement.clientHeight * this.BUFFER_COUNT)) {
+                    this.OnScrollUp();
                 }
             }
             this.lastScrollTop = parentEl.scrollTop;
         };
     }
-
-    public OnScrollDown?: () => void;
-    public OnScrollUp?: () => void;
 }

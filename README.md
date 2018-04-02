@@ -70,6 +70,10 @@ Development is done with [typescript](https://www.typescriptlang.org/) and the b
   ```
   npm build
   ```
+- try lint autofix
+  ```
+  npm lint-fix
+  ```
 
 ### Tests
 Unit tests are running in [Karma](https://karma-runner.github.io) using [Jasmine](https://jasmine.github.io/).
