@@ -1,7 +1,8 @@
 import { Descriptor } from './descriptor';
-import { ScrollerFactory } from './scroller-factory';
+import { ElementsManager } from './elements-manager';
 import { DOMManager } from './dom-manager';
 import { ScrollDetector } from './scroll-detector';
+import { Scroller } from './scroller';
 
 declare var angular;
 
@@ -16,8 +17,10 @@ scrollerModule.directive('infiniteScroller', () => {
             const descriptor = Descriptor.createFrom(scope, attr);
             const domManager = new DOMManager(element);
             const scrollDetector = new ScrollDetector(element);
+            const elementsManager = new ElementsManager(descriptor, domManager, linker);
+            const scroller = new Scroller(descriptor, scrollDetector, elementsManager);
 
-            ScrollerFactory.createFrom(descriptor, domManager, linker, scrollDetector);
+            scroller.Subscribe();
         },
     };
 });

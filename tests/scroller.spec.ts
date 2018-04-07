@@ -26,7 +26,8 @@ describe('Scroller', function () {
                 watchHandler = callback;
             });
 
-            expect(new Scroller(descriptorMock, scrollDetectorMock, elementsManagerMock)).toBeDefined();
+            const scroller = new Scroller(descriptorMock, scrollDetectorMock, elementsManagerMock);
+            scroller.Subscribe();
 
             // Act
             watchHandler([1, 2, 3]);
