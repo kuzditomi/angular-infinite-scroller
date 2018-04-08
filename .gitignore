@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 coverage
 .map
+e2e/site/dist

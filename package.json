@@ -10,6 +10,7 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts tests/**/*.ts",
     "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts",
+    "e2e:serve": "http-server e2e/site -o -c-1",
     "e2e": "protractor e2e/conf.js",
     "webdriver:install": "webdriver-manager update",
     "webdriver:start": "webdriver-manager start chrome"
@@ -40,6 +41,7 @@
     "copy-webpack-plugin": "4.4.2",
     "coveralls": "3.0.0",
     "filemanager-webpack-plugin": "1.0.24",
+    "http-server": "^0.11.1",
     "jasmine": "3.0.0",
     "jasmine-spec-reporter": "^4.2.1",
     "karma": "2.0.0",
