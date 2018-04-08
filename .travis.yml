@@ -40,5 +40,9 @@ jobs:
       script:
         - npm run e2e
       env: COMMAND=test:e2e
+
+notifications:
+  email: false
+  
 addons:
   chrome: stable
