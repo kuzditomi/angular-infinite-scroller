@@ -12,8 +12,6 @@
     "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts",
     "e2e:serve": "http-server e2e/site -o -c-1",
     "e2e": "protractor e2e/conf.js",
-    "webdriver:install": "webdriver-manager update",
-    "webdriver:start": "webdriver-manager start chrome"
   },
   "repository": {
     "type": "git",
@@ -41,9 +39,9 @@
     "copy-webpack-plugin": "4.4.2",
     "coveralls": "3.0.0",
     "filemanager-webpack-plugin": "1.0.24",
-    "http-server": "^0.11.1",
+    "http-server": "0.11.1",
     "jasmine": "3.0.0",
-    "jasmine-spec-reporter": "^4.2.1",
+    "jasmine-spec-reporter": "4.2.1",
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
@@ -51,7 +49,7 @@
     "karma-travis-fold-reporter": "1.0.1",
     "karma-typescript": "3.0.12",
     "path": "0.12.7",
-    "protractor": "^5.3.1",
+    "protractor": "5.3.0",
     "rxjs": "5.0.0-rc.4",
     "ts-loader": "3.3.1",
     "tslint": "5.6.0",
@@ -59,7 +57,6 @@
     "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "1.1.8",
-    "webdriver-manager": "12.0.6",
     "webpack": "3.10.0",
     "zone.js": "0.7.2"
   }

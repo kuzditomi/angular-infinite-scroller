@@ -2,14 +2,17 @@ let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 exports.config = {
     framework: 'jasmine',
-    seleniumAddress: 'http://localhost:4444/wd/hub',
+    capabilities: {
+        browserName: 'chrome'
+    },
+    directConnect: true,
     specs: ['tests/*.spec.js'],
-    onPrepare: function(){
+    onPrepare: function () {
         jasmine.getEnv().addReporter(new SpecReporter({
-          displayFailuresSummary: true,
-          displayFailuredSpec: true,
-          displaySuiteNumber: true,
-          displaySpecDuration: true
+            displayFailuresSummary: true,
+            displayFailuredSpec: true,
+            displaySuiteNumber: true,
+            displaySpecDuration: true
         }));
-      }
+    }
 }
