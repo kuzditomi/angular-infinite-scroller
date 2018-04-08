@@ -9,25 +9,17 @@ before_install:
  - sleep 3 # give xvfb some time to start
 
 stages:
-  - build
   - test
-  - report
 
 jobs:
   include:
-    - stage: build
-      script:
-        - npm install
-        - npm run build
     - stage: test
-      script: 
+      script:
         - npm run test
+      after_success: 'npm run coveralls'
+    - stage: test
       script:
         - npm run e2e
-    - stage: report
-      script: 'npm run coveralls'
 
 addons:
   chrome: stable
-
-  
