@@ -16,10 +16,12 @@ jobs:
     - stage: test
       script:
         - npm run test
+      env: COMMAND=test:unit
       after_success: 'npm run coveralls'
     - stage: test
       script:
         - npm run e2e
+      env: COMMAND=test:e2e
 
 addons:
   chrome: stable
