@@ -6,11 +6,13 @@
   "scripts": {
     "build": "webpack",
     "test": "karma start karma.conf.js",
-    "e2e": "echo 'e2e siker'",
-    "test-debug": "karma start karma.debug.conf.js",
+    "test:debug": "karma start karma.debug.conf.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts tests/**/*.ts",
-    "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts"
+    "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts",
+    "e2e": "protractor e2e/conf.js",
+    "webdriver:install": "webdriver-manager update",
+    "webdriver:start": "webdriver-manager start chrome"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
     "coveralls": "3.0.0",
     "filemanager-webpack-plugin": "1.0.24",
     "jasmine": "3.0.0",
+    "jasmine-spec-reporter": "^4.2.1",
     "karma": "2.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-jasmine": "1.1.1",
@@ -46,13 +49,15 @@
     "karma-travis-fold-reporter": "1.0.1",
     "karma-typescript": "3.0.12",
     "path": "0.12.7",
+    "protractor": "^5.3.1",
     "rxjs": "5.0.0-rc.4",
     "ts-loader": "3.3.1",
     "tslint": "5.6.0",
     "tslint-eslint-rules": "3.2.0",
-    "tslint-webpack-plugin": "^1.2.2",
+    "tslint-webpack-plugin": "1.2.2",
     "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "1.1.8",
+    "webdriver-manager": "12.0.6",
     "webpack": "3.10.0",
     "zone.js": "0.7.2"
   }

@@ -25,6 +25,7 @@ module.exports = {
             onEnd: {
                 copy: [
                     { source: 'dist/angular-infinite-scroller.min.js', destination: 'docs/assets/js' },
+                    { source: 'dist/angular-infinite-scroller.min.js', destination: 'e2e/site' },
                 ]
             }
         }),
