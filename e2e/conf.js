@@ -3,7 +3,10 @@ let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 exports.config = {
     framework: 'jasmine',
     capabilities: {
-        browserName: 'chrome'
+        browserName: 'chrome',
+        chromeOptions: {
+            args: ["--headless", "--disable-gpu", "--window-size=800,600"]
+        }
     },
     directConnect: true,
     specs: ['tests/*.spec.js'],
