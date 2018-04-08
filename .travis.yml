@@ -35,9 +35,9 @@ jobs:
       after_success: 'npm run coveralls'
     # end-to-end tests
     - stage: test
+      before_script: './node_modules/protractor/bin/webdriver-manager update'
       script:
         - npm run e2e
       env: COMMAND=test:e2e
 addons:
   chrome: stable
-  
