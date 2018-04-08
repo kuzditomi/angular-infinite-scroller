@@ -9,7 +9,7 @@ before_install:
  - sleep 3 # give xvfb some time to start
 
 stages:
-  - builddeploy
+  - name: build-and-deploy
   - test
 
 jobs:

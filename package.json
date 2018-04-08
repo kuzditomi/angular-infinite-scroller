@@ -11,7 +11,7 @@
     "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts tests/**/*.ts",
     "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts",
     "e2e:serve": "http-server e2e/site -o -c-1",
-    "e2e": "protractor e2e/conf.js",
+    "e2e": "protractor e2e/conf.js"
   },
   "repository": {
     "type": "git",
