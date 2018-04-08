@@ -24,6 +24,8 @@ jobs:
         api_key:
           secure: jpFS7uqKMrcETZNqcBcAjN3S7DSTOvF510LrPngWlO6dD8bSjW4XRYZBXVn9SHKtXnPTznAAli+nwPy4pj35zlehk7mWwLCwOlcv5ZyIulXCjzw7W4DBUq/BLYZqUvYznZGXJ2X84dv9Xccl20FKSEZDQy8o7BUo2+LWo4Vn6rpACqgc2BQkMf+ASnGGsZXwaw+FpjjNES6OngIcCEWAgHGxEcJeZZjDs9YtIG+U40As3udL2Gd1LMkbtH0b5XUO1+JzWqC5EzVY31aZG6W3fG6C36zU5dzP5X51jKa2pMaCaqY5Hk68orDx/jYSSg26/dwtSwqnkgTc4eMpC4bjDAth+LKUbzsVe6cMBSxtHOMA1KuEY7tNZfNE3v0WPBKQR4bVcEyoGjqwR9ymAvTC9poqfC+48sYYUxT+xoRZgT+E8qzS8rJdqtC34LeLhRwPPQpInGb3HKpUxuIcDHmVB10iU0ZKMzg5TUoqbLPyDjiRTtOPExnbLhMEEVBjqHfIpzsf+YKNMgoeqU4wFtu3Z22IIcf6OuN3sUWuDcosQ6FrnLguo4ktGbVIFLD5Rc4N7NMemJqQe9C4amDU6dtW5krnarFCM0X9BVAuqvHWmoyo2ibTQZikx3QzI9RrUThOqwjVd+QUKL4Fln9k+fiKQWMIzdp3CiHR9kcjeWkZ2vc=
         app: angular-infinite-scroller
+        on:
+          all_branches: true
     # unit tests
     - stage: test
       script:
