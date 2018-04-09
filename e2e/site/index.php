@@ -1,0 +1,1 @@
+<?php /* for heroku */ include_once("index.html"); ?>

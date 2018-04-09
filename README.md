@@ -78,14 +78,18 @@ Development is done with [typescript](https://www.typescriptlang.org/) and the b
 ### Tests
 Unit tests are running in [Karma](https://karma-runner.github.io) using [Jasmine](https://jasmine.github.io/).
 
-- running tests (also generates html report under `coverage` folder)
+- running unit-tests (also generates html report under `coverage` folder)
   ```
   npm run test
   ```
- 
-
 - running Karma in debug mode with proper source-maps
   ```
   npm run test-debug
+  ```
+- running UI tests
+  ```javascript
+  npm run webdriver-update // install/update webdriver for protractor
+  npm run e2e:serve // serve static site for UI tests
+  npm run e2e:local // run protractor against localhost
   ```
 

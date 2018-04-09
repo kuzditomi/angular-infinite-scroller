@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Infinite scroll example</title>
+    <link href="style.css" rel="stylesheet" />
+    <script src="dist/angular.min.js"></script>
+    <script src="dist/angular-infinite-scroller.min.js"></script>
+</head>
+
+<body ng-app="example">
+    <main ng-controller="ExampleController">
+        <div class="example-container">
+            <h1>Simple list</h1>
+            <div id="simple-list" class="scroll-container">
+                <div infinite-scroller="item in items | filter:numberfilter">
+                    {{item}}
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="example.js"></script>
+</body>
+
+</html>
