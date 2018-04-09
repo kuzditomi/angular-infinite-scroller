@@ -8,14 +8,19 @@ exports.config = {
             args: ["--headless", "--disable-gpu", "--window-size=800,600"]
         }
     },
+    baseUrl: 'http://127.0.0.1:8080/',
     directConnect: true,
     specs: ['tests/*.spec.js'],
     onPrepare: function () {
-        jasmine.getEnv().addReporter(new SpecReporter({
+        const env = jasmine.getEnv();
+        
+        env.clearReporters();
+        env.addReporter(new SpecReporter({
             displayFailuresSummary: true,
             displayFailuredSpec: true,
             displaySuiteNumber: true,
             displaySpecDuration: true
         }));
-    }
+    },
+    SELENIUM_PROMISE_MANAGER: false,
 }

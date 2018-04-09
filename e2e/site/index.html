@@ -15,7 +15,7 @@
     <main ng-controller="ExampleController">
         <div class="example-container">
             <h1>Simple list</h1>
-            <div class="scroll-container">
+            <div id="simple-list" class="scroll-container">
                 <div infinite-scroller="item in items | filter:numberfilter">
                     {{item}}
                 </div>

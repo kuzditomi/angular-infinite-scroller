@@ -10,8 +10,10 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "tslint -c tslint.json -p tsconfig.json src/**/*.ts tests/**/*.ts",
     "lint-fix": "tslint -c tslint.json -p tsconfig.json --fix src/**/*.ts tests/**/*.ts",
+    "webdriver-update": "node ./node_modules/protractor/bin/webdriver-manager update --gecko false",
     "e2e:serve": "http-server e2e/site -o -c-1",
-    "e2e": "protractor e2e/conf.js"
+    "e2e:local": "protractor e2e/conf.js",
+    "e2e:travis": "protractor e2e/conf.travis.js"
   },
   "repository": {
     "type": "git",
