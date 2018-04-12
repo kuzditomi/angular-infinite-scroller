@@ -16,10 +16,22 @@
         <div class="example-container">
             <h1>Simple list</h1>
             <div id="simple-list" class="scroll-container">
-                <div infinite-scroller="item in items | filter:numberfilter">
+                <div infinite-scroller="item in items">
                     {{item}}
                 </div>
             </div>
+        </div>
+
+        <div class="example-container">
+            <h1>Ordered person list</h1>
+            <div id="person-list" class="scroll-container">
+                <div infinite-scroller="person in persons | orderBy:'name'">
+                    {{person.name}}
+                </div>
+            </div>
+            <input id="txtName" type="text" ng-model="newName"/>
+            <button id="btnAddPerson" ng-click="addPerson()">Add person</button>
+            <button id="btnInitPersons" ng-click="initPersons()">Init persons</button>
         </div>
     </main>
     <script src="example.js"></script>

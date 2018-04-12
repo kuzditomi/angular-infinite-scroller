@@ -11,6 +11,28 @@
             }
 
             scope.items = numbers;
+
+            const persons = [
+                'Bela', 'Denes', 'Aladar'
+            ].map((name, index) => {
+                return {
+                    id: index + 1,
+                    name
+                };
+            });
+
+            scope.persons = [];
+
+            scope.initPersons = () => {
+                scope.persons = persons;
+            };
+
+            scope.addPerson = () => {
+                scope.persons.push({
+                    id: scope.persons.length + 1,
+                    name: scope.newName
+                });
+            };
         }
     ]);
 }());
