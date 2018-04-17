@@ -33,7 +33,8 @@ export class ElementsManager implements IElementsManager {
 
     public UpdateCollection = (newCollection: any[]) => {
         this.collection = newCollection;
-        this.FillBottom();
+        this.fixDisplayWindow();
+        this.fillBottom();
         this.updateScopes();
         this.cleanUpBottom();
     }
@@ -116,7 +117,7 @@ export class ElementsManager implements IElementsManager {
         }
     }
 
-    private FillBottom() {
+    private fillBottom() {
         const parentBottom = this.domManager.GetScrollBottomPosition();
 
         // don't add more if elements are already out of sight
@@ -139,11 +140,19 @@ export class ElementsManager implements IElementsManager {
         }
     }
 
+    private fixDisplayWindow = () => {
+        const endDiff = this.displayTo - this.collection.length;
+        if (endDiff > 0) {
+            this.displayTo -= endDiff;
+            const fixedFrom = this.displayFrom - endDiff;
+            this.displayFrom = fixedFrom > 0 ? fixedFrom : 0;
+        }
+    }
+
     private cleanUpBottom = () => {
         let i = this.collection.length;
         while (i < this.items.length) {
             this.removeElement(i);
-            this.displayTo--;
         }
     }
 

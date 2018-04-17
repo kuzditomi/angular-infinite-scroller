@@ -12,6 +12,7 @@
 
             scope.items = numbers;
 
+            // ordered person list
             const persons = [
                 'Bela', 'Denes', 'Aladar'
             ].map((name, index) => {
@@ -37,6 +38,19 @@
             scope.removePerson = () => {
                 scope.persons.splice(0, 1); // remove Denes
             };
+
+            // filtered list
+            const As = Array.from(Array(10)).map(n => 'A');
+            const Bs = Array.from(Array(10)).map(n => 'B');
+            const Cs = Array.from(Array(10)).map(n => 'C');
+            const Ds = Array.from(Array(10)).map(n => 'D');
+
+            scope.filteredList = As.concat(Bs).concat(Cs).concat(Ds).map((letter, index) => {
+                return {
+                    id: index,
+                    name: letter
+                };
+            });
         }
     ]);
 }());

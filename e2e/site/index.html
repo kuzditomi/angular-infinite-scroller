@@ -29,10 +29,21 @@
                     {{person.name}}
                 </div>
             </div>
-            <input id="txtName" type="text" ng-model="newName"/>
+            <input id="txtName" type="text" ng-model="newName" />
             <button id="btnAddPerson" ng-click="addPerson()">Add person</button>
             <button id="btnInitPersons" ng-click="initPersons()">Init persons</button>
             <button id="btnRemovePerson" ng-click="removePerson()">Remove person</button>
+        </div>
+
+        <div class="example-container">
+            <h1>Filtered list</h1>
+            <div id="filtered-list" class="scroll-container">
+                <div infinite-scroller="item in filteredList | filter: { name: nameFilter }">
+                    <span class="id">{{ item.id }}</span>
+                    <span class="name">{{ item.name }} </span>
+                </div>
+            </div>
+            <input id="txtFilter" type="text" ng-model="nameFilter" />
         </div>
     </main>
     <script src="example.js"></script>
