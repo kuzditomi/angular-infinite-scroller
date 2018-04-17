@@ -26,6 +26,7 @@ module.exports = {
                 copy: [
                     { source: 'dist/angular-infinite-scroller.min.js', destination: 'docs/assets/js' },
                     { source: 'dist/angular-infinite-scroller.min.js', destination: 'e2e/site/dist' },
+                    { source: 'dist/angular-infinite-scroller.min.js.map', destination: 'e2e/site/dist' },
                     { source: 'node_modules/angular/angular.min.js', destination: 'e2e/site/dist' },
                 ]
             }

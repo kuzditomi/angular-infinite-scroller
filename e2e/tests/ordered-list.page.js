@@ -1,6 +1,7 @@
 exports.orderedList = {
     initPersons,
-    addName
+    addName,
+    clickRemove
 };
 
 function initPersons() {
@@ -13,6 +14,10 @@ function fillName(name) {
 
 function clickAdd() {
     return element(by.css('#btnAddPerson')).click();
+}
+
+function clickRemove() {
+    return element(by.css('#btnRemovePerson')).click();
 }
 
 async function addName(name) {

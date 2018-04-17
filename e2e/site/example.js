@@ -24,7 +24,7 @@
             scope.persons = [];
 
             scope.initPersons = () => {
-                scope.persons = persons;
+                scope.persons = persons.slice();
             };
 
             scope.addPerson = () => {
@@ -32,6 +32,10 @@
                     id: scope.persons.length + 1,
                     name: scope.newName
                 });
+            };
+
+            scope.removePerson = () => {
+                scope.persons.splice(0, 1); // remove Denes
             };
         }
     ]);

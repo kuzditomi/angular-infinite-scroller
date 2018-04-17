@@ -35,6 +35,7 @@ export class ElementsManager implements IElementsManager {
         this.collection = newCollection;
         this.FillBottom();
         this.updateScopes();
+        this.cleanUpBottom();
     }
 
     public AddTop = () => {
@@ -136,8 +137,14 @@ export class ElementsManager implements IElementsManager {
             const item = this.items[i];
             item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
         }
+    }
 
-        // TODO: clean dom if removal took place
+    private cleanUpBottom = () => {
+        let i = this.collection.length;
+        while (i < this.items.length) {
+            this.removeElement(i);
+            this.displayTo--;
+        }
     }
 
     private transcludeElement = (index: number): Item => {

@@ -8,10 +8,10 @@ describe('Ordered list', function () {
   it('should be initialized properly on click', async function () {
     await orderedListPage.initPersons();
 
-    const elementsInOrderedScroll = element.all(by.css('#person-list > div'));
-    const texts = await elementsInOrderedScroll.map(elm => elm.getText());
+    const elementsInOrderedScroll = await element.all(by.css('#person-list > div'));
+    const texts = await Promise.all(elementsInOrderedScroll.map(elm => elm.getText()));
 
-    expect(elementsInOrderedScroll).toEqual(['Aladar', 'Bela', 'Denes']);
+    expect(texts).toEqual(['Aladar', 'Bela', 'Denes']);
   });
 
   it('should add new name in proper order', async function () {
@@ -22,5 +22,14 @@ describe('Ordered list', function () {
     const texts = await elementsInOrderedScroll.map(elm => elm.getText());
 
     expect(elementsInOrderedScroll).toEqual(['Aladar', 'Bela', 'Cecil', 'Denes']);
+  });
+
+  it('should remove element from DOM if not needed', async function () {
+    await orderedListPage.initPersons();
+    await orderedListPage.clickRemove();    
+
+    const elementsInOrderedScroll = await element.all(by.css('#person-list > div')).count();
+
+    expect(elementsInOrderedScroll).toEqual(2);
   });
 });
