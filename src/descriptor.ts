@@ -11,7 +11,6 @@ export class Descriptor {
     public CollectionExpression: string;
     public IndexExpression: string;
     public TrackByExpression: string;
-    public UseRevealer: boolean;
     public Scope: ng.IScope;
 
     private constructor() { }
@@ -24,7 +23,6 @@ export class Descriptor {
         descriptor.CollectionExpression = expressionDesc.collection;
         descriptor.IndexExpression = expressionDesc.index;
         descriptor.TrackByExpression = expressionDesc.trackBy;
-        descriptor.UseRevealer = attr['useRevealer'] !== undefined;
         descriptor.Scope = scope;
         descriptor.Settings = settings;
 
