@@ -56,6 +56,23 @@ Bind the array like you would use ng-repeat in the template
 </div>
 ```
 
+## Known issues
+
+### Binding with curly brackets
+First population of items is using calculation based on items' height, so it's important to make rows rendered with it's <strong>final height</strong> even before the binding actually happened.
+To prevent accidental linebreaking before the template is linked avoid using brackets for longer texts. Instead of:
+```html
+<p>{{currentCar.Owner.Firstname + '' + currentCar.Owner.LastName}}</p>
+```
+Use
+```html
+<p ng-bind="currentCar.Owner.Firstname + '' + currentCar.Owner.LastName"></p>
+```
+
+### One time binding
+DOM elements in the list are reused in the scrolling process, and are not cleaned up completely.
+To make this behaviour work, avoid using one time binding in the list.
+
 ## Contribution
 You are welcome to [submit issues](https://github.com/kuzditomi/angular-infinite-scroller/issues/new) or pull-requests to the repository.
 

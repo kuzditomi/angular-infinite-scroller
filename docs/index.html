@@ -211,3 +211,25 @@ const randName = names[Math.floor(Math.random() * names.length)];
       </table>
   </div>
 </section>
+<section class="bs-docs-section" ng-non-bindable>
+  <h1 id="known-issues" class="page-header">Known issues</h1>
+  <h2 id="ngbind">Binding with curly brackets</h2>
+  <p>
+    First population of items is using calculation based on items' height, so it's important to
+    make rows rendered with it's <strong>final height</strong> even before the binding actually happened.
+  </p>
+  <p>
+    To prevent accidental linebreaking before the template is linked avoid using brackets for longer texts. Instead of:
+<!-- @formatter:off -->
+{% highlight html %}<p>{% raw %}{{currentCar.Owner.Firstname + '' + currentCar.Owner.LastName}}{% endraw %}</p>{% endhighlight %}
+<!-- @formatter:on -->
+Use:
+<!-- @formatter:off -->
+{% highlight html %}<p ng-bind="currentCar.Owner.Firstname + '' + currentCar.Owner.LastName"></p>{% endhighlight %}
+<!-- @formatter:on -->
+  </p>
+
+  <h2 id="onetime-binding">One time binding</h2>
+  <p>DOM elements in the list are reused in the scrolling process, and are not cleaned up completely.</p>
+  <p>To make this behaviour work, avoid using one time binding in the list.</p>
+</section>
