@@ -1,7 +1,7 @@
 {
   "name": "angular-infinite-scroller",
   "version": "1.0.0",
-  "description": "",
+  "description": "Infinite scroller library for AngularJS",
   "main": "src/angular-infinite-scroll.min.js",
   "scripts": {
     "build": "webpack",
