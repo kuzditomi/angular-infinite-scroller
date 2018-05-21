@@ -5,14 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
-            "type": "node",
+            "name": "karma",
+            "type": "chrome",
             "request": "launch",
-            "program": "${workspaceRoot}/node_modules/protractor/bin/protractor",
-            "stopOnEntry": false,
-            "args": [
-                "${workspaceRoot}/e2e/conf.js"
-            ],
+            "sourceMaps": true,
+            "webRoot": "${workspaceRoot}",
+            "url": "http://localhost:9876/debug.html",
+            "pathMapping": {
+                "/": "${workspaceRoot}",
+                "/base/": "${workspaceRoot}/"
+            },
+            "runtimeArgs": [
+                "--headless"
+            ]
         }
     ]
 }

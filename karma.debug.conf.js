@@ -21,6 +21,7 @@ module.exports = function (config) {
             }
         },
         singleRun: false,
-        browsers: ["Chrome"]
+        browsers: [],
+        port: 9876
     });
 };
