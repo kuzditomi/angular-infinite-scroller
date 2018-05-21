@@ -5,8 +5,25 @@
     "tasks": [
         {
             "identifier": "karma-run-debug",
+            "label": "run karma in debug",
             "type": "npm",
             "script": "test:debug",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "identifier": "serve-test-site",
+            "label": "serve test site",
+            "type": "npm",
+            "script": "e2e:serve",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "identifier": "e2e-local",
+            "label": "run e2e tests",
+            "type": "npm",
+            "script": "e2e:local",
             "isBackground": true,
             "problemMatcher": []
         }

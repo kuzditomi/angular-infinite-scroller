@@ -18,10 +18,10 @@ describe('Ordered list', function () {
     await orderedListPage.initPersons();
     await orderedListPage.addName("Cecil");
 
-    const elementsInOrderedScroll = element.all(by.css('#person-list > div'));
-    const texts = await elementsInOrderedScroll.map(elm => elm.getText());
+    const elementsInOrderedScroll = await element.all(by.css('#person-list > div'));
+    const texts = await Promise.all(elementsInOrderedScroll.map(elm => elm.getText()));
 
-    expect(elementsInOrderedScroll).toEqual(['Aladar', 'Bela', 'Cecil', 'Denes']);
+    expect(texts).toEqual(['Aladar', 'Bela', 'Cecil', 'Denes']);
   });
 
   it('should remove element from DOM if not needed', async function () {

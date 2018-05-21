@@ -45,6 +45,17 @@
             </div>
             <input id="txtFilter" type="text" ng-model="nameFilter" />
         </div>
+
+        <div class="example-container">
+            <h1>Track-by example</h1>
+            <div id="track-by-filtered-list" class="scroll-container">
+                <div infinite-scroller="item in filteredList | filter: { name: trackByNameFilter} track by item.id">
+                    <span class="id">{{ item.id }}</span>
+                    <span class="name">{{ item.name }} </span>
+                </div>
+            </div>
+            <input id="txtTrackByNameFilter" type="text" ng-model="trackByNameFilter" />
+        </div>
     </main>
     <script src="example.js"></script>
 </body>

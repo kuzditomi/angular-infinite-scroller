@@ -5,6 +5,7 @@
   "main": "src/angular-infinite-scroll.min.js",
   "scripts": {
     "build": "webpack",
+    "dev": "webpack --watch",
     "test": "karma start karma.conf.js",
     "test:debug": "karma start karma.debug.conf.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",

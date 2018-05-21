@@ -10,7 +10,7 @@ exports.config = {
     },
     baseUrl: 'http://127.0.0.1:8080/',
     directConnect: true,
-    specs: ['tests/*.spec.js'],
+    specs: ['tests/**/*.spec.js'],
     onPrepare: function () {
         const env = jasmine.getEnv();
         

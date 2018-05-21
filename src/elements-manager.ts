@@ -4,6 +4,7 @@ import { IDOMManager } from './dom-manager';
 export type Item = {
     Element: ng.IAugmentedJQuery;
     Scope: ng.IScope;
+    TrackByValue: string
 };
 
 export interface IElementsManager {
@@ -134,10 +135,22 @@ export class ElementsManager implements IElementsManager {
     }
 
     private updateScopes = () => {
+        if (this.descriptor.TrackByExpression) {
+            this.maintainElementsWithTrackBy();
+        } else {
+            this.overwriteScopes();
+        }
+    }
+
+    private overwriteScopes = () => {
         for (let i = 0; i < this.items.length; i++) {
             const item = this.items[i];
             item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
         }
+    }
+
+    private maintainElementsWithTrackBy = () => {
+        return 2;
     }
 
     private fixDisplayWindow = () => {

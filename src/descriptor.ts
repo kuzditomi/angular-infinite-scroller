@@ -1,6 +1,6 @@
 import { ScrollSettings } from './scroll-settings';
 
-interface ExpressionDescriptor {
+interface IExpressionDescriptor {
     index: string;
     collection: string;
     trackBy: string;
@@ -29,7 +29,7 @@ export class Descriptor {
         return descriptor;
     }
 
-    private static parseExpression(expression: string): ExpressionDescriptor {
+    private static parseExpression(expression: string): IExpressionDescriptor {
         // parser logic mostly copied from ngRepeater https://github.com/angular/angular.js/blob/master/src/ng/directive/ngRepeat.js
         let match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
