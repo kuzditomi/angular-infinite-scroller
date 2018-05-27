@@ -1,6 +1,29 @@
 (function () {
     const app = angular.module("example", ['angular-infinite-scroller']);
 
+    app.directive('dirtyCheck', function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                let original = null;
+
+                scope.$watch(function () {
+                    return ngModel.$modelValue;
+                }, function (newvalue, oldvalue) {
+                    if (original === null && newvalue != undefined)
+                        original = newvalue;
+
+                    if (newvalue != oldvalue) {
+                        element.addClass('mydirty');
+                    }
+                    if (newvalue == original) {
+                        element.removeClass('mydirty');
+                    }
+                });
+            }
+        };
+    });
+
     app.controller('ExampleController', [
         '$scope',
         function (scope) {
@@ -32,6 +55,13 @@
                 scope.persons.push({
                     id: scope.persons.length + 1,
                     name: scope.newName
+                });
+            };
+
+            scope.addPersonFiltered = () => {
+                scope.filteredList.unshift({
+                    id: -1,
+                    name: 'X'
                 });
             };
 

@@ -66,3 +66,10 @@ span.color-box {
     display: inline-block;
     border: 1px solid black;
 }
+
+#filtered-list input, #track-by-filtered-list input{
+    width: 20px;
+}
+#filtered-list input.mydirty, #track-by-filtered-list input.mydirty {
+    border: 2px solid brown;
+}
