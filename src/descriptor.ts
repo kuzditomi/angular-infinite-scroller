@@ -31,7 +31,7 @@ export class Descriptor {
 
     private static parseExpression(expression: string): IExpressionDescriptor {
         // parser logic mostly copied from ngRepeater https://github.com/angular/angular.js/blob/master/src/ng/directive/ngRepeat.js
-        let match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+        let match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
         if (!match) {
             throw Error(`Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '${expression}'.`);
@@ -39,12 +39,12 @@ export class Descriptor {
 
         const lhs = match[1];
         const rhs = match[2];
-        const trackByExp = match[3];
+        const trackByExp = match[4];
 
-        match = lhs.match(/^(?:(\s*[$\w]+))$/);
+        match = lhs.match(/^(?:(\s*[$\w]+)|\(\s*([$\w]+)\s*,\s*([$\w]+)\s*\))$/);
 
         if (!match) {
-            throw Error(`'_item_' in '_item_ in _collection_' should be an identifier but got '${lhs}'.`);
+            throw '\'_item_\' in \'_item_ in _collection_\' should be an identifier or \'(_key_, _value_)\' expression, but got \'{0}\'.';
         }
 
         return {

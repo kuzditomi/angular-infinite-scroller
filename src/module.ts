@@ -1,14 +1,14 @@
 import { Descriptor } from './descriptor';
-import { ElementsManager } from './elements-manager';
 import { DOMManager } from './dom-manager';
 import { ScrollDetector } from './scroll-detector';
 import { Scroller } from './scroller';
+import { ElementsManagerFactory } from './elements-manager-factory';
 
 declare var angular;
 
 export const scrollerModule = angular.module('angular-infinite-scroller', []);
 
-scrollerModule.directive('infiniteScroller', () => {
+scrollerModule.directive('infiniteScroller', ['$parse', (parser: ng.IParseService) => {
     return {
         priority: 1000,
         restrict: 'A',
@@ -17,10 +17,11 @@ scrollerModule.directive('infiniteScroller', () => {
             const descriptor = Descriptor.createFrom(scope, attr);
             const domManager = new DOMManager(element);
             const scrollDetector = new ScrollDetector(element);
-            const elementsManager = new ElementsManager(descriptor, domManager, linker);
+            const elementsManager = ElementsManagerFactory.createFrom(descriptor, domManager, linker, parser);
+
             const scroller = new Scroller(descriptor, scrollDetector, elementsManager);
 
             scroller.Subscribe();
         },
     };
-});
+}]);

@@ -26,6 +26,11 @@
             "script": "e2e:local",
             "isBackground": true,
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "dev",
+            "problemMatcher": []
         }
     ]
 }

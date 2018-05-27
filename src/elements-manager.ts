@@ -1,11 +1,10 @@
 import { Descriptor } from './descriptor';
 import { IDOMManager } from './dom-manager';
 
-export type Item = {
+export interface Item {
     Element: ng.IAugmentedJQuery;
     Scope: ng.IScope;
-    TrackByValue: string
-};
+}
 
 export interface IElementsManager {
     UpdateCollection(newCollection: any[]): void;
@@ -16,12 +15,12 @@ export interface IElementsManager {
 }
 
 export class ElementsManager implements IElementsManager {
-    private collection: any[];
-    private items: Item[];
-    private displayFrom: number;
-    private displayTo: number;
+    protected collection: any[];
+    protected items: Item[];
+    protected displayFrom: number;
+    protected displayTo: number;
 
-    constructor(private descriptor: Descriptor, private domManager: IDOMManager, private linker: ng.ITranscludeFunction) {
+    public constructor(protected descriptor: Descriptor, protected domManager: IDOMManager, protected linker: ng.ITranscludeFunction) {
         this.items = [];
         this.displayFrom = 0;
         this.displayTo = 0;
@@ -32,7 +31,7 @@ export class ElementsManager implements IElementsManager {
         });
     }
 
-    public UpdateCollection = (newCollection: any[]) => {
+    public UpdateCollection(newCollection: any[]) {
         this.collection = newCollection;
         this.fixDisplayWindow();
         this.fillBottom();
@@ -40,7 +39,7 @@ export class ElementsManager implements IElementsManager {
         this.cleanUpBottom();
     }
 
-    public AddTop = () => {
+    public AddTop() {
         let countTillStop = this.descriptor.Settings.BufferSize;
 
         let i = 0;
