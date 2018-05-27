@@ -62,9 +62,10 @@ export class TrackByElementsManager extends ElementsManager {
         // populate new items
         for (let i = this.displayFrom; i < this.displayTo; i++) {
             const trackByKey = this.getTrackByOfCollectionItem(i);
-            if (this.trackedItems[trackByKey]) {
-                newItemList.push(this.trackedItems[i]);
-                newItemsHash[trackByKey] = this.trackedItems[i];
+            const trackedItem = this.trackedItems[trackByKey];
+            if (trackedItem) {
+                newItemList.push(trackedItem);
+                newItemsHash[trackByKey] = trackedItem;
             } else {
                 const newItem = this.transcludeElement(i) as TrackableItem;
                 newItemList.push(newItem);

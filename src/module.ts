@@ -15,7 +15,7 @@ scrollerModule.directive('infiniteScroller', ['$parse', (parser: ng.IParseServic
         transclude: 'element',
         link: (scope: ng.IScope, element: ng.IAugmentedJQuery, attr: ng.IAttributes, _ctrl, linker: ng.ITranscludeFunction) => {
             const descriptor = Descriptor.createFrom(scope, attr);
-            const domManager = new DOMManager(element, document);
+            const domManager = new DOMManager(element);
             const scrollDetector = new ScrollDetector(element);
             const elementsManager = ElementsManagerFactory.createFrom(descriptor, domManager, linker, parser);
 

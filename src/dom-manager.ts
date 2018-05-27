@@ -25,7 +25,7 @@ export class DOMManager implements IDOMManager {
     private container: ng.IAugmentedJQuery;
     private containerElement: HTMLElement;
 
-    constructor(element: ng.IAugmentedJQuery, private document: Document) {
+    constructor(element: ng.IAugmentedJQuery) {
         this.container = element.parent();
         this.containerElement = this.container[0];
     }
@@ -68,14 +68,9 @@ export class DOMManager implements IDOMManager {
         this.containerElement.scrollTo(0, this.containerElement.offsetHeight * relativePosition);
     }
     UpdateElementsWith(elements: ng.IAugmentedJQuery[]): void {
-        const elementsFragment = this.document.createDocumentFragment();
-        const div = this.document.createElement('div');
-        elementsFragment.appendChild(div);
-
+        this.containerElement.innerHTML = '';
         for (let element of elements) {
-            div.appendChild(element[0]);
+            this.containerElement.appendChild(element[0]);
         }
-
-        this.containerElement.innerHTML = div.innerHTML;
     }
 }
