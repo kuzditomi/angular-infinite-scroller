@@ -17,13 +17,15 @@ export interface IDOMManager {
 
     FixScroll(relativePosition: number);
     Remove(element: ng.IAugmentedJQuery): void;
+
+    UpdateElementsWith(elements: ng.IAugmentedJQuery[]): void;
 }
 
 export class DOMManager implements IDOMManager {
     private container: ng.IAugmentedJQuery;
     private containerElement: HTMLElement;
 
-    constructor(element: ng.IAugmentedJQuery) {
+    constructor(element: ng.IAugmentedJQuery, private document: Document) {
         this.container = element.parent();
         this.containerElement = this.container[0];
     }
@@ -64,5 +66,16 @@ export class DOMManager implements IDOMManager {
     }
     FixScroll(relativePosition: number) {
         this.containerElement.scrollTo(0, this.containerElement.offsetHeight * relativePosition);
+    }
+    UpdateElementsWith(elements: ng.IAugmentedJQuery[]): void {
+        const elementsFragment = this.document.createDocumentFragment();
+        const div = this.document.createElement('div');
+        elementsFragment.appendChild(div);
+
+        for (let element of elements) {
+            div.appendChild(element[0]);
+        }
+
+        this.containerElement.innerHTML = div.innerHTML;
     }
 }

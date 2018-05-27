@@ -21,21 +21,19 @@ export class ElementsManager implements IElementsManager {
     protected displayTo: number;
 
     public constructor(protected descriptor: Descriptor, protected domManager: IDOMManager, protected linker: ng.ITranscludeFunction) {
+        this.collection = [];
         this.items = [];
         this.displayFrom = 0;
         this.displayTo = 0;
 
-        // this way the memory can only leak until the scroller lives
-        this.descriptor.Scope.$on('$destroy', () => {
-            this.items = [];
-        });
+        this.descriptor.Scope.$on('$destroy', () => this.onDestroy);
     }
 
     public UpdateCollection(newCollection: any[]) {
         this.collection = newCollection;
         this.fixDisplayWindow();
         this.fillBottom();
-        this.updateScopes();
+        this.overwriteScopes();
         this.cleanUpBottom();
     }
 
@@ -54,7 +52,7 @@ export class ElementsManager implements IElementsManager {
         this.displayFrom = i + 1;
     }
 
-    public AddBottom = () => {
+    public AddBottom() {
         const parentBottom = this.domManager.GetScrollBottomPosition();
 
         // add this many children below visible area
@@ -77,7 +75,7 @@ export class ElementsManager implements IElementsManager {
         this.displayTo = i;
     }
 
-    public RemoveTop = () => {
+    public RemoveTop() {
         let hasInvisibleChildren = true;
         while (hasInvisibleChildren) {
             if (this.items.length <= this.descriptor.Settings.BufferSize) {
@@ -97,7 +95,7 @@ export class ElementsManager implements IElementsManager {
         }
     }
 
-    public RemoveBottom = () => {
+    public RemoveBottom() {
         if (this.items.length < this.descriptor.Settings.BufferSize) {
             return;
         }
@@ -117,7 +115,21 @@ export class ElementsManager implements IElementsManager {
         }
     }
 
-    private fillBottom() {
+    // tries to keep the current windows size, but adjust window based on the new collection size
+    protected fixDisplayWindow = () => {
+        const endDiff = this.displayTo - this.collection.length;
+        if (endDiff > 0) {
+            this.displayTo -= endDiff;
+            const fixedFrom = this.displayFrom - endDiff;
+            this.displayFrom = fixedFrom > 0 ? fixedFrom : 0;
+        }
+    }
+
+    protected onDestroy() {
+        this.items = [];
+    }
+
+    protected fillBottom() {
         const parentBottom = this.domManager.GetScrollBottomPosition();
 
         // don't add more if elements are already out of sight
@@ -133,42 +145,14 @@ export class ElementsManager implements IElementsManager {
         this.AddBottom();
     }
 
-    private updateScopes = () => {
-        if (this.descriptor.TrackByExpression) {
-            this.maintainElementsWithTrackBy();
-        } else {
-            this.overwriteScopes();
-        }
-    }
-
-    private overwriteScopes = () => {
-        for (let i = 0; i < this.items.length; i++) {
-            const item = this.items[i];
-            item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
-        }
-    }
-
-    private maintainElementsWithTrackBy = () => {
-        return 2;
-    }
-
-    private fixDisplayWindow = () => {
-        const endDiff = this.displayTo - this.collection.length;
-        if (endDiff > 0) {
-            this.displayTo -= endDiff;
-            const fixedFrom = this.displayFrom - endDiff;
-            this.displayFrom = fixedFrom > 0 ? fixedFrom : 0;
-        }
-    }
-
-    private cleanUpBottom = () => {
+    protected cleanUpBottom = () => {
         let i = this.collection.length;
         while (i < this.items.length) {
             this.removeElement(i);
         }
     }
 
-    private transcludeElement = (index: number): Item => {
+    protected transcludeElement(index: number): Item {
         const item = {} as Item;
 
         const childScope = this.descriptor.Scope.$new();
@@ -182,9 +166,16 @@ export class ElementsManager implements IElementsManager {
         return item;
     }
 
-    private removeElement = (index: number) => {
+    protected removeElement(index: number) {
         const item = this.items.splice(index, 1)[0];
         this.domManager.Remove(item.Element);
         item.Scope.$destroy();
+    }
+
+    private overwriteScopes = () => {
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i];
+            item.Scope[this.descriptor.IndexExpression] = this.collection[this.displayFrom + i];
+        }
     }
 }
