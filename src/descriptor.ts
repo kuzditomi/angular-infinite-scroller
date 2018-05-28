@@ -34,18 +34,11 @@ export class Descriptor {
         let match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
 
         if (!match) {
-            throw Error(`Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '${expression}'.`);
+            throw `Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '${expression}'.`;
         }
 
-        const lhs = match[1];
         const rhs = match[2];
         const trackByExp = match[4];
-
-        match = lhs.match(/^(?:(\s*[$\w]+)|\(\s*([$\w]+)\s*,\s*([$\w]+)\s*\))$/);
-
-        if (!match) {
-            throw '\'_item_\' in \'_item_ in _collection_\' should be an identifier or \'(_key_, _value_)\' expression, but got \'{0}\'.';
-        }
 
         return {
             collection: rhs,

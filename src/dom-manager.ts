@@ -1,8 +1,4 @@
-declare var angular;
-
 export interface IDOMManager {
-    CreateRevealerElement(): ng.IAugmentedJQuery;
-
     AppendElement(element: ng.IAugmentedJQuery): void;
     PrependElement(element: ng.IAugmentedJQuery): void;
     AppendElementToContainer(element: ng.IAugmentedJQuery, containerToAppend: ng.IAugmentedJQuery): void;
@@ -30,44 +26,29 @@ export class DOMManager implements IDOMManager {
         this.containerElement = this.container[0];
     }
 
-    CreateRevealerElement(): ng.IAugmentedJQuery {
-        return angular.element('<div class="revealer"></div>');
-    }
+    GetElementTopPosition = (element: ng.IAugmentedJQuery): number => element[0].offsetTop;
 
-    GetElementTopPosition(element: ng.IAugmentedJQuery): number {
-        return element[0].offsetTop;
-    }
-    Remove(element: ng.IAugmentedJQuery): void {
-        element.remove();
-    }
-    GetScrollTopPosition = () => {
-        return this.containerElement.offsetTop + this.containerElement.scrollTop;
-    }
-    GetElementBottomPosition(element: ng.IAugmentedJQuery) {
-        return element[0].offsetTop + element[0].offsetHeight;
-    }
-    GetScrollBottomPosition = () => {
-        return this.containerElement.offsetTop + this.containerElement.scrollTop + this.containerElement.offsetHeight;
-    }
-    GetRelativePositionOf(elementRatio: number): number {
-        return this.containerElement.offsetTop + this.containerElement.offsetHeight * elementRatio;
-    }
-    AppendElement = (element: ng.IAugmentedJQuery) => {
-        this.container.append(element);
-    }
-    PrependElement = (element: ng.IAugmentedJQuery) => {
-        this.container.prepend(element);
-    }
-    AppendElementToContainer = (element: ng.IAugmentedJQuery, containerToAppend: ng.IAugmentedJQuery) => {
-        containerToAppend.append(element);
-    }
-    PrependElementToContainer = (element: ng.IAugmentedJQuery, containerToPrepend: ng.IAugmentedJQuery) => {
-        containerToPrepend.prepend(element);
-    }
-    FixScroll(relativePosition: number) {
-        this.containerElement.scrollTo(0, this.containerElement.offsetHeight * relativePosition);
-    }
-    UpdateElementsWith(elements: ng.IAugmentedJQuery[]): void {
+    Remove = (element: ng.IAugmentedJQuery) => element.remove();
+
+    GetScrollTopPosition = () => this.containerElement.offsetTop + this.containerElement.scrollTop;
+
+    GetElementBottomPosition = (element: ng.IAugmentedJQuery) => element[0].offsetTop + element[0].offsetHeight;
+
+    GetScrollBottomPosition = () => this.containerElement.offsetTop + this.containerElement.scrollTop + this.containerElement.offsetHeight;
+
+    GetRelativePositionOf = (elementRatio: number) => this.containerElement.offsetTop + this.containerElement.offsetHeight * elementRatio;
+
+    AppendElement = (element: ng.IAugmentedJQuery) => this.container.append(element);
+
+    PrependElement = (element: ng.IAugmentedJQuery) => this.container.prepend(element);
+
+    AppendElementToContainer = (element: ng.IAugmentedJQuery, containerToAppend: ng.IAugmentedJQuery) => containerToAppend.append(element);
+
+    PrependElementToContainer = (element: ng.IAugmentedJQuery, containerToPrepend: ng.IAugmentedJQuery) => containerToPrepend.prepend(element);
+
+    FixScroll = (relativePosition: number) => this.containerElement.scrollTo(0, this.containerElement.offsetHeight * relativePosition);
+
+    UpdateElementsWith = (elements: ng.IAugmentedJQuery[]): void => {
         this.containerElement.innerHTML = '';
         for (let element of elements) {
             this.containerElement.appendChild(element[0]);
